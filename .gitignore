@@ -1,0 +1,42 @@
+# vim swp files
+.vimrc
+*.swp
+
+# OSX os files
+.DS_Store
+.DS_Store?
+
+# SASS
+.sass-cache
+*.css.map
+
+#
+/.idea/
+
+# Config per app
+/application/config/core.php
+/public/temp.php
+/coverage
+
+# Directory with user-specific karma configs
+/test/karma
+
+# Javascript code coverage output
+/test/jasmine/coverage
+
+# User-specific phpunit.xml files
+/phpunit.xml
+
+# Modules installed from npm
+node_modules/
+
+# composer packages & generated files
+packages.json
+/vendor/
+/public/assets/js/vendor/
+
+# bundler installed bundles
+/bin/
+/.bundle/*
+!/.bundle/config
+!/bin/cron

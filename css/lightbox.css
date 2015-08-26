@@ -1,0 +1,92 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+body.lightbox-active {
+  overflow: hidden;
+}
+
+.image {
+  cursor: pointer;
+  float: left;
+  margin-right: 10px;
+}
+
+#blocking {
+  background: rgba(255, 255, 255, 0.94);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+}
+
+#lightbox-wrap {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  text-align: center;
+  visibility: hidden;
+  z-index: 51;
+}
+#lightbox-wrap.shown {
+  visibility: visible;
+}
+#lightbox-wrap img {
+  display: inline-block;
+  max-height: 100%;
+  max-width: 100%;
+  position: relative;
+  width: auto;
+}
+
+#lightbox-inner-wrap {
+  height: 90%;
+  margin: auto;
+  max-height: 90%;
+  max-width: 90%;
+  position: relative;
+}
+
+#img-wrap {
+  display: inline-block;
+  height: 100%;
+  position: relative;
+}
+
+.control {
+  position: absolute;
+  z-index: 53;
+}
+
+.next,
+.prev {
+  background: rgba(37, 38, 42, 0.1);
+  border-radius: 30px;
+  height: 60px;
+  margin-top: -30px;
+  top: 50%;
+  width: 60px;
+}
+.next svg,
+.prev svg {
+  fill: #fff;
+  height: 50%;
+  margin-top: 25%;
+  width: 50%;
+}
+
+.next {
+  right: 40px;
+}
+
+.prev {
+  left: 40px;
+}
+
+.close {
+  height: 24px;
+  right: -40px;
+  width: 24px;
+}
