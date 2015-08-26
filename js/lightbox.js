@@ -14,10 +14,10 @@ $(function() {
     this.$tmpl = $(template);
 
     this.render = function() {
-      var $newImage = this.$tmpl,
-          self = this;
+      var self = this,
+          $img = this.$tmpl.find('img');
 
-      this.$tmpl.find('img').attr('src', this.src);
+      $img.attr('src', this.src);
 
       loading = true;
 
@@ -29,27 +29,24 @@ $(function() {
 
       // show loading spinner here?
 
-      $newImage.find('img')
-      .load(function() {
+      $img.load(function() {
         var top;
 
         if ($activeImage) {
-          $activeImage.replaceWith($newImage);
+          $activeImage.replaceWith(self.$tmpl);
         }
         else {
-          $context.append($newImage);
+          $context.append(self.$tmpl);
         }
 
-        $activeImage = $newImage;
+        $activeImage = self.$tmpl;
         active = self.id;
 
         top = ($(window).height() / 2) - (this.height / 2);
 
-        $newImage.css('top', top);
-
-        $newImage.find('#img-wrap').height(this.height);
-
-        $newImage.addClass('shown');
+        self.$tmpl.css('top', top);
+        self.$tmpl.find('#img-wrap').height(this.height);
+        self.$tmpl.addClass('shown');
         loading = false;
       });
     };
