@@ -69,6 +69,7 @@ body {
 
 .next,
 .prev {
+
   background: rgba(#25262a, .1);
   border-radius: 30px;
   height: 60px;
@@ -83,7 +84,7 @@ body {
     width: 50%;
   }
 
-}
+} // .next, .prev
 
 .next {
   right: 40px;
