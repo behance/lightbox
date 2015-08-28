@@ -1,21 +1,4 @@
-body {
-
-  margin: 0;
-  padding: 0;
-
-  &.lightbox-active {
-    overflow: hidden;
-  }
-
-} // body
-
-.image {
-  cursor: pointer;
-  float: left;
-  margin-right: 10px;
-}
-
-#blocking {
+#lightbox-blocking {
   background: rgba(#fff, .94);
   height: 100%;
   left: 0;
@@ -49,12 +32,52 @@ body {
 } // #lightbox-wrap
 
 #lightbox-inner-wrap {
+
   height: 90%; // height must be set explicitly for img sizing
   margin: auto;
   max-height: 90%;
   max-width: 90%;
   position: relative;
-}
+
+  .control {
+    position: absolute;
+    z-index: 53;
+  }
+
+  .next,
+  .prev {
+
+    background: rgba(#25262a, .1);
+    border-radius: 30px;
+    height: 60px;
+    margin-top: -30px;
+    top: 50%;
+    width: 60px;
+
+    svg {
+      fill: #fff;
+      height: 50%;
+      margin-top: 25%;
+      width: 50%;
+    }
+
+  } // .next, .prev
+
+  .next {
+    right: 40px;
+  }
+
+  .prev {
+    left: 40px;
+  }
+
+  .close {
+    height: 24px;
+    right: -40px;
+    width: 24px;
+  }
+
+} // #lightbox-inner-wrap
 
 #img-wrap {
   display: inline-block;
@@ -62,40 +85,3 @@ body {
   position: relative;
 }
 
-.control {
-  position: absolute;
-  z-index: 53;
-}
-
-.next,
-.prev {
-
-  background: rgba(#25262a, .1);
-  border-radius: 30px;
-  height: 60px;
-  margin-top: -30px;
-  top: 50%;
-  width: 60px;
-
-  svg {
-    fill: #fff;
-    height: 50%;
-    margin-top: 25%;
-    width: 50%;
-  }
-
-} // .next, .prev
-
-.next {
-  right: 40px;
-}
-
-.prev {
-  left: 40px;
-}
-
-.close {
-  height: 24px;
-  right: -40px;
-  width: 24px;
-}
