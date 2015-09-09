@@ -2,9 +2,6 @@ body {
   margin: 0;
   padding: 0;
 }
-body.lightbox-active {
-  overflow: hidden;
-}
 
 .image {
   cursor: pointer;
