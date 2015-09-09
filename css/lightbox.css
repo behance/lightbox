@@ -1,8 +1,12 @@
+body.lightbox-active {
+  overflow: hidden;
+}
+
 #lightbox-blocking {
   background: rgba(255, 255, 255, 0.94);
   height: 100%;
   left: 0;
-  position: absolute;
+  position: fixed;
   top: 0;
   width: 100%;
   z-index: 50;
@@ -10,10 +14,12 @@
 
 #lightbox-wrap {
   height: 100%;
-  width: 100%;
-  position: absolute;
+  left: 0;
+  position: fixed;
   text-align: center;
+  top: 0;
   visibility: hidden;
+  width: 100%;
   z-index: 51;
 }
 #lightbox-wrap.shown {
@@ -42,6 +48,7 @@
 #lightbox-inner-wrap .prev {
   background: rgba(37, 38, 42, 0.1);
   border-radius: 30px;
+  cursor: pointer;
   height: 60px;
   margin-top: -30px;
   top: 50%;
@@ -65,8 +72,7 @@
   right: -40px;
   width: 24px;
 }
-
-#img-wrap {
+#lightbox-inner-wrap #img-wrap {
   display: inline-block;
   height: 100%;
   position: relative;
