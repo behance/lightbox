@@ -1,5 +1,13 @@
-body.lightbox-active {
+.lightbox-active {
   overflow: hidden;
+}
+
+.lightbox-loading {
+  cursor: wait;
+}
+
+.lightbox-link {
+  cursor: pointer;
 }
 
 #lightbox-blocking {
@@ -46,25 +54,37 @@ body.lightbox-active {
 }
 #lightbox-inner-wrap .next,
 #lightbox-inner-wrap .prev {
-  background: rgba(37, 38, 42, 0.1);
-  border-radius: 30px;
   cursor: pointer;
-  height: 60px;
-  margin-top: -30px;
-  top: 50%;
-  width: 60px;
+  height: 100%;
+  top: 0;
+  width: 50%;
 }
 #lightbox-inner-wrap .next svg,
 #lightbox-inner-wrap .prev svg {
-  fill: #fff;
-  height: 50%;
-  margin-top: 25%;
-  width: 50%;
+  top: -webkit-calc(50% - 15px) ;
+  top: calc(50% - 15px) ;
+  position: absolute;
+}
+#lightbox-inner-wrap .next svg .lightbox-icon-bg,
+#lightbox-inner-wrap .prev svg .lightbox-icon-bg {
+  opacity: .1;
+  fill: #26262A;
+  enable-background: new;
+}
+#lightbox-inner-wrap .next svg .lightbox-icon-arrow,
+#lightbox-inner-wrap .prev svg .lightbox-icon-arrow {
+  fill: #FFFFFF;
 }
 #lightbox-inner-wrap .next {
   right: 40px;
 }
+#lightbox-inner-wrap .next svg {
+  right: 0;
+}
 #lightbox-inner-wrap .prev {
+  left: 0;
+}
+#lightbox-inner-wrap .prev svg {
   left: 40px;
 }
 #lightbox-inner-wrap .close {
@@ -72,7 +92,11 @@ body.lightbox-active {
   right: -40px;
   width: 24px;
 }
-#lightbox-inner-wrap #img-wrap {
+#lightbox-inner-wrap .close:hover {
+  cursor: pointer;
+}
+
+#lightbox-img-wrap {
   display: inline-block;
   height: 100%;
   position: relative;
