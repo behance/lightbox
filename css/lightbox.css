@@ -56,8 +56,13 @@
 #lightbox-inner-wrap .prev {
   cursor: pointer;
   height: 100%;
+  opacity: 0;
   top: 0;
   width: 50%;
+}
+#lightbox-inner-wrap .next:hover,
+#lightbox-inner-wrap .prev:hover {
+  opacity: 1;
 }
 #lightbox-inner-wrap .next svg,
 #lightbox-inner-wrap .prev svg {
@@ -88,8 +93,10 @@
   left: 40px;
 }
 #lightbox-inner-wrap .close {
+  position: fixed;
   height: 24px;
-  right: -40px;
+  right: 40px;
+  top: 40px;
   width: 24px;
 }
 #lightbox-inner-wrap .close:hover {

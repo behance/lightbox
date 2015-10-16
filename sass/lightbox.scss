@@ -71,8 +71,13 @@ $button-padding: 40px;
 
     cursor: pointer;
     height: 100%;
+    opacity: 0;
     top: 0;
     width: 50%;
+
+    &:hover {
+      opacity: 1;
+    }
 
     svg {
 
@@ -115,8 +120,10 @@ $button-padding: 40px;
 
   .close {
 
+    position: fixed;
     height: 24px;
-    right: -$button-padding;
+    right: 40px;
+    top: 40px;
     width: 24px;
 
     &:hover {
