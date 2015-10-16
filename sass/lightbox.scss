@@ -1,5 +1,21 @@
-body.lightbox-active {
+$button-padding: 40px;
+
+@mixin calc($property, $params, $important: false) {
+  $important: if($important, ' !important', '');
+  #{$property}: -webkit-calc(#{$params}) #{$important}; // Safari 6
+  #{$property}: calc(#{$params}) #{$important};
+}
+
+.lightbox-active {
   overflow: hidden;
+}
+
+.lightbox-loading {
+  cursor: wait;
+}
+
+.lightbox-link {
+  cursor: pointer;
 }
 
 #lightbox-blocking {
@@ -10,7 +26,7 @@ body.lightbox-active {
   top: 0;
   width: 100%;
   z-index: 50;
-}
+} // #lightbox-blocking
 
 #lightbox-wrap {
 
@@ -53,41 +69,73 @@ body.lightbox-active {
   .next,
   .prev {
 
-    background: rgba(#25262a, .1);
-    border-radius: 30px;
     cursor: pointer;
-    height: 60px;
-    margin-top: -30px;
-    top: 50%;
-    width: 60px;
+    height: 100%;
+    opacity: 0;
+    top: 0;
+    width: 50%;
+
+    &:hover {
+      opacity: 1;
+    }
 
     svg {
-      fill: #fff;
-      height: 50%;
-      margin-top: 25%;
-      width: 50%;
-    }
+
+      @include calc('top', '50% - 15px');
+      position: absolute;
+
+      .lightbox-icon-bg {
+        opacity: .1;
+        fill: #26262A;
+        enable-background: new;
+      }
+
+      .lightbox-icon-arrow {
+        fill:#FFFFFF;
+      }
+
+    } // svg
 
   } // .next, .prev
 
   .next {
-    right: 40px;
-  }
+
+    right: $button-padding;
+
+    svg {
+      right: 0;
+    }
+
+  } // .next
 
   .prev {
-    left: 40px;
-  }
+
+    left: 0;
+
+    svg {
+      left: $button-padding;
+    }
+
+  } // .prev
 
   .close {
-    height: 24px;
-    right: -40px;
-    width: 24px;
-  }
 
-  #img-wrap {
-    display: inline-block;
-    height: 100%;
-    position: relative;
-  }
+    position: fixed;
+    height: 24px;
+    right: 40px;
+    top: 40px;
+    width: 24px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+  } // .close
 
 } // #lightbox-inner-wrap
+
+#lightbox-img-wrap {
+  display: inline-block;
+  height: 100%;
+  position: relative;
+}

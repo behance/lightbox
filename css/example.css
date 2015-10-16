@@ -4,7 +4,6 @@ body {
 }
 
 .image {
-  cursor: pointer;
   float: left;
   margin-right: 10px;
 }
