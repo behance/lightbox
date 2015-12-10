@@ -5,62 +5,96 @@ $(function() {
       images = [],
       active = false,
       loading = false,
+      FADE_TIME = 200,
+      single = false,
       $context,
       $activeImage;
 
   var LightboxImage = function(src, id) {
     this.src = src;
     this.id = id;
-    this.$tmpl = $(template);
+    this.$view = $(template).hide();
+
+    var self = this;
+
+    this.imgLoad = function($loadedImg) {
+      var top;
+
+      $body.removeClass('lightbox-loading');
+
+      $context.append(self.$view);
+
+      self.$view.fadeIn(FADE_TIME);
+
+      if ($activeImage) {
+        $activeImage.fadeOut(FADE_TIME, function() {
+          $activeImage.remove();
+          $activeImage = self.$view;
+          loading = false;
+        });
+      }
+      else {
+        $activeImage = self.$view;
+        loading = false;
+      }
+
+      active = self.id;
+      if ($loadedImg.height()) {
+        top = ($(window).height() - $loadedImg.height()) / 2;
+        self.$view.addClass('shown');
+        self.$view.css('top', top);
+        self.$view.find('.js-img-wrap').height($loadedImg.height());
+      }
+    };
 
     this.render = function() {
-      var self = this,
-          $img = this.$tmpl.find('img');
+      if (loading) {
+        return;
+      }
 
-      $img.attr('src', this.src);
+      var $img = this.$view.find('img');
 
       loading = true;
+
+      $body.addClass('lightbox-active lightbox-loading');
+
+      if (single) {
+        this.$view.addClass('single');
+      }
 
       if (active === false) {
         bind();
         $body.append($blocking);
-        $body.addClass('lightbox-active lightbox-loading');
       }
 
-      // show loading spinner here?
+      $img.attr('src', this.src);
 
-      $img.load(function() {
-        var top;
-
-        $body.removeClass('lightbox-loading');
-
-        if ($activeImage) {
-          $activeImage.replaceWith(self.$tmpl);
-        }
-        else {
-          $context.append(self.$tmpl);
-        }
-
-        $activeImage = self.$tmpl;
-        active = self.id;
-
-        top = ($(window).height() / 2) - (this.height / 2);
-
-        self.$tmpl.css('top', top);
-        self.$tmpl.find('.js-img-wrap').height(this.height);
-        self.$tmpl.addClass('shown');
-        loading = false;
-      });
+      // because IOS doesnt fire load for cached images,
+      // but luckily this will be true immediately if that is the case
+      if ($img[0].complete) {
+        this.imgLoad($img);
+      }
+      else {
+        $img.on('load', function(e) {
+          this.imgLoad($img);
+        }.bind(this));
+      }
     };
   };
 
   function close() {
-    $activeImage.remove();
-    $activeImage = null;
-    $body.find($blocking).remove();
-    $body.removeClass('lightbox-active');
-    active = false;
+    if (loading || active === false) {
+      return;
+    }
+
     $body.add($context).off('click.lightbox');
+    $activeImage.fadeOut(FADE_TIME, function() {
+      $activeImage.remove();
+      $activeImage = null;
+      $body.find($blocking).remove();
+      $body.removeClass('lightbox-active');
+      active = false;
+    });
   }
 
   function next() {
@@ -73,10 +107,18 @@ $(function() {
 
   function bind() {
     $body.on('click.lightbox', function() {
-      if (active !== false) {
+      close();
+    });
+
+    $(document).on('keyup.lightbox', function(e) {
+      if (e.keyCode === 27) { // escape
         close();
       }
     });
+
+    if (single) {
+      return;
+    }
 
     $context.on('click.lightbox', '.js-next', function(e) {
       e.stopPropagation();
@@ -88,19 +130,12 @@ $(function() {
       prev();
     });
 
-    $(document).keyup(function(e) {
-      if (active !== false && loading === false) {
-        switch(e.keyCode) {
-          case 27: // escape
-            close();
-            break;
-          case 37: // left arrow
-            prev();
-            break;
-          case 39: // right arrow
-            next();
-            break;
-        }
+    $(document).on('keyup.lightbox', function(e) {
+      if (e.keyCode === 37) { // left arrow
+        prev();
+      }
+      else if (e.keyCode === 39) { // right arrow
+        next();
       }
     });
   }
@@ -114,9 +149,14 @@ $(function() {
       images[i] = new LightboxImage($img.data('src'), i);
     });
 
-    $('.js-lightbox').on('click', function() {
+    $('.js-lightbox').on('click', function(e) {
+      e.stopPropagation();
       images[$(this).data('img-id')].render();
     });
+
+    if (images.length == 1) {
+      single = true;
+    }
   }
 
   window.lightbox = {
