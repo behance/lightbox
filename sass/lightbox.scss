@@ -10,7 +10,8 @@ $button-padding: 40px;
   overflow: hidden;
 }
 
-.lightbox-loading {
+.lightbox-loading,
+.lightbox-loading * {
   cursor: wait;
 }
 
@@ -51,6 +52,20 @@ $button-padding: 40px;
     width: auto;
   }
 
+  &.single {
+
+    .next,
+    .prev {
+
+      &,
+      &:hover {
+        display: none;
+      }
+
+    }
+
+  } // &.single
+
 } // #lightbox-wrap
 
 #lightbox-inner-wrap {
@@ -62,6 +77,7 @@ $button-padding: 40px;
   position: relative;
 
   .control {
+    cursor: pointer;
     position: absolute;
     z-index: 53;
   }
@@ -69,7 +85,6 @@ $button-padding: 40px;
   .next,
   .prev {
 
-    cursor: pointer;
     height: 100%;
     opacity: 0;
     top: 0;
@@ -100,10 +115,10 @@ $button-padding: 40px;
 
   .next {
 
-    right: $button-padding;
+    right: 0;
 
     svg {
-      right: 0;
+      right: $button-padding;
     }
 
   } // .next
