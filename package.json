@@ -1,0 +1,23 @@
+{
+  "name": "lightbox",
+  "version": "0.0.0",
+  "description": "Image lightbox",
+  "main": "lightbox.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/behance/lightbox.git"
+  },
+  "author": "John Refano <refano@adobe.com>",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/behance/lightbox/issues"
+  },
+  "homepage": "https://github.com/behance/lightbox#readme",
+  "dependencies": {
+    "jquery": "~2.1.1"
+  }
+}
