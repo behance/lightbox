@@ -1,4 +1,4 @@
-import 'style!../styles/lightbox.scss';
+import 'style!./sass/lightbox.scss';
 
 var $blocking = $('<div class="js-blocking" id="lightbox-blocking"></div>'),
     $body = $(document.body),
@@ -23,7 +23,7 @@ var LightboxImage = function(src, id) {
 
     $body.removeClass('lightbox-loading');
 
-    $context.append(self.$view);
+    $body.append(self.$view);
 
     self.$view.fadeIn(FADE_TIME);
 
@@ -54,7 +54,6 @@ var LightboxImage = function(src, id) {
     }
 
     var $img = this.$view.find('img');
-
     loading = true;
 
     $body.addClass('lightbox-active lightbox-loading');
@@ -69,7 +68,6 @@ var LightboxImage = function(src, id) {
     }
 
     $img.attr('src', this.src);
-
     // because IOS doesnt fire load for cached images,
     // but luckily this will be true immediately if that is the case
     if ($img[0].complete) {
@@ -144,13 +142,13 @@ function bind() {
 function init(context) {
   $context = $(context || document.body);
 
-  $('.js-lightbox').each(function(i, el) {
+  $context.find('.js-lightbox').each(function(i, el) {
     var $img = $(el);
     $img.data('img-id', i).addClass('lightbox-link');
     images[i] = new LightboxImage($img.data('src'), i);
   });
 
-  $('.js-lightbox').on('click', function(e) {
+  $context.find('.js-lightbox').on('click', function(e) {
     e.stopPropagation();
     images[$(this).data('img-id')].render();
   });
