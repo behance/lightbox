@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import 'style!./sass/lightbox.scss';
 
 var $blocking = $('<div class="js-blocking" id="lightbox-blocking"></div>'),
