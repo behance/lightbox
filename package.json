@@ -3,7 +3,6 @@
   "version": "1.0.3",
   "description": "Image lightbox",
   "main": "lightbox.js",
-  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
