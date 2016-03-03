@@ -1,6 +1,6 @@
 {
   "name": "lightbox",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Image lightbox",
   "main": "lightbox.js",
   "private": true,
