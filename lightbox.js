@@ -164,7 +164,7 @@ function init(options) {
     images[i] = new LightboxImage($img.data('src'), i);
   });
 
-  $context.find('.js-lightbox').on('click', function(e) {
+  $context.find(':not(a) > .js-lightbox').on('click', function(e) {
     e.stopPropagation();
     images[$(this).data('img-id')].render();
   });
