@@ -6,7 +6,7 @@ var bgColor,
     opacity,
     $blocking = $('<div class="js-blocking" id="lightbox-blocking"></div>'),
     $body = $(document.body),
-    $template = $(`
+    template = `
       <div class="js-lightbox-wrap" id="lightbox-wrap">
         <div class="js-lightbox-inner-wrap" id="lightbox-inner-wrap">
           <div class="js-img-wrap" id="lightbox-img-wrap">
@@ -32,7 +32,7 @@ var bgColor,
           </div>
         </div>
       </div>
-    `),
+    `,
     images = [],
     active = false,
     loading = false,
@@ -44,7 +44,7 @@ var bgColor,
 var LightboxImage = function(src, id) {
   this.src = src;
   this.id = id;
-  this.$view = $template.hide();
+  this.$view = $(template).hide();
 
   var self = this;
 
@@ -76,6 +76,8 @@ var LightboxImage = function(src, id) {
       self.$view.css('top', top);
       self.$view.find('.js-img-wrap').height($loadedImg.height());
     }
+
+    _setCloseIconColor(self.$view, bgColor);
   };
 
   this.render = function() {
@@ -173,11 +175,16 @@ function bind() {
   });
 }
 
-function _setCloseIconColor(bgColor) {
+function _setCloseIconColor($context, bgColor) {
   var tinyBgColor = tinycolor(bgColor);
   var closeIconColor = tinyBgColor.isLight() ? '#000' : '#FFF';
+  var $svg = $context.find('.js-close svg');
 
-  $template.find('.js-close svg').attr('fill', closeIconColor);
+  if($svg.attr('fill')) {
+    return;
+  }
+
+  $svg.attr('fill', closeIconColor);
 }
 
 function init(options) {
@@ -191,8 +198,6 @@ function init(options) {
   $context = $(config.context);
   bgColor = config.bgColor;
   opacity = config.opacity;
-
-  _setCloseIconColor(bgColor);
 
   $context.find('.js-lightbox').each(function(i, el) {
     var $img = $(el);
