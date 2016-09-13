@@ -190,6 +190,8 @@ function _setCloseIconColor($context, bgColor) {
 function init(options) {
   var defaults = {
     context: document.body,
+    imageSelector: '.js-lightbox',
+    imageSrcDataAttr: 'src',
     bgColor: '#fff',
     opacity: '0.94'
   };
@@ -199,13 +201,13 @@ function init(options) {
   bgColor = config.bgColor;
   opacity = config.opacity;
 
-  $context.find('.js-lightbox').each(function(i, el) {
+  $context.find(config.imageSelector).each(function(i, el) {
     var $img = $(el);
     $img.data('img-id', i).addClass('lightbox-link');
-    images[i] = new LightboxImage($img.data('src'), i);
+    images[i] = new LightboxImage($img.data(config.imageSrcDataAttr), i);
   });
 
-  $context.find(':not(a) > .js-lightbox').on('click', function(e) {
+  $context.find(`:not(a) > ${config.imageSelector}`).on('click', function(e) {
     e.stopPropagation();
     images[$(this).data('img-id')].render();
   });
