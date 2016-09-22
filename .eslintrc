@@ -1,0 +1,9 @@
+{
+  "extends": "./node_modules/eslint-preset-behance/.eslintrc",
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "object-shorthand": "off"
+  }
+}
