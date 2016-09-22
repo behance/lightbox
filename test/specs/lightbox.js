@@ -7,7 +7,6 @@ describe('lightbox', function() {
   const FADE_TIME = 200;
   const BLOCKING_CLASS = '.js-blocking';
   const LIGHTBOX_CLASS = '.js-lightbox';
-  const PREV_CLASS = '.js-prev';
   const NEXT_CLASS = '.js-next';
   const CLOSE_CLASS = '.js-close';
   const imagePath = (id) => `/base/test/fixtures/images/img_${id}.png`;
