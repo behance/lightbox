@@ -13,7 +13,7 @@
     "url": "git+https://github.com/behance/lightbox.git"
   },
   "author": "John Refano <refano@adobe.com>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/behance/lightbox/issues"
   },
