@@ -1,4 +1,5 @@
 /* eslint-env jasmine */
+/* global affix */
 
 import $ from 'jquery';
 import lightbox from '../../lightbox';
@@ -25,7 +26,7 @@ describe('lightbox', function() {
       tempWait(() => {
         expect($(BLOCKING_CLASS)).not.toBeVisible();
         done();
-      })
+      });
     });
   }
 
