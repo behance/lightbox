@@ -9,12 +9,25 @@ module.exports = function(config) {
       'jasmine'
     ],
     files: [
+      'node_modules/jquery/dist/jquery.js',
+      'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
+      'node_modules/jasmine-fixture/dist/jasmine-fixture.js',
+      {
+        pattern: 'test/fixtures/images/*.png',
+        watched: false,
+        included: false,
+        served: true,
+        nocache: false
+      },
       'test/specs/**/*.js'
     ],
     preprocessors: {
       'test/specs/**/*.js': ['webpack']
     },
     webpack: {
+      externals: {
+        'jquery': 'jQuery'
+      },
       module: {
         rules: [{
           test: /\.js$/,
