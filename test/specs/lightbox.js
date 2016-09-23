@@ -32,18 +32,15 @@ describe('lightbox', function() {
     affix(`${lightboxDiv(1)}+${lightboxDiv(2)}`);
   });
 
-  describe('init', function() {
-    it('should be a function', function() {
-      expect(lightbox.init).toEqual(jasmine.any(Function));
-    });
+  afterEach(function(done) {
+    close(done);
+  });
 
-    it('should render the blocking div when clicked', function(done) {
-      lightbox.init();
-      expect($(BLOCKING_CLASS)).not.toBeVisible();
-      $(LIGHTBOX_CLASS).first().click();
-      expect($(BLOCKING_CLASS)).toBeVisible();
-      close(done);
-    });
+  it('should render the blocking div when clicked on the lightbox node', function() {
+    lightbox.init();
+    expect($(BLOCKING_CLASS)).not.toBeVisible();
+    $(LIGHTBOX_CLASS).first().click();
+    expect($(BLOCKING_CLASS)).toBeVisible();
   });
 
   it('should go to the next image when clicking on the next button', function(done) {
@@ -62,7 +59,7 @@ describe('lightbox', function() {
       tempWait(() => {
         expect($(img(1))).not.toBeVisible();
         expect($(img(2))).toBeVisible();
-        close(done);
+        done();
       });
     });
   });
