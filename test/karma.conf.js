@@ -31,7 +31,10 @@ module.exports = function(config) {
       module: {
         rules: [{
           test: /\.js$/,
-          loader: 'babel'
+          loader: 'babel',
+          query: {
+            presets: ['behance']
+          }
         }, {
           test: /\.scss$/,
           loader: 'css!sass?includePaths[]=' + bourbonIncludePaths,
