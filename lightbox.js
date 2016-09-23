@@ -6,10 +6,8 @@ const ESCAPE_KEYCODE = 27;
 const LEFT_ARROW_KEYCODE = 37;
 const RIGHT_ARROW_KEYCODE = 39;
 const FADE_TIME = 200;
-const $blocking = $('<div class="js-blocking" id="lightbox-blocking"></div>');
-const $body = $(document.body);
-const images = [];
-const template = `
+const BACKDROP_TEMPLATE = '<div class="js-blocking" id="lightbox-blocking"></div>';
+const LIGHTBOX_TEMPLATE = `
   <div class="js-lightbox-wrap" id="lightbox-wrap">
     <div class="js-lightbox-inner-wrap" id="lightbox-inner-wrap">
       <div class="js-img-wrap" id="lightbox-img-wrap">
@@ -36,42 +34,36 @@ const template = `
     </div>
   </div>
 `;
-
-let active = false;
-let loading = false;
-let bgColor;
-let opacity;
-let single = false;
-let $context;
-let $activeImage;
+const $body = $(document.body);
 
 class LightboxImage {
-  constructor(src, id) {
+  constructor(lightbox, src, id) {
+    this.lightbox = lightbox;
     this.src = src;
     this.id = id;
-    this.$view = $(template).hide();
+    this.$view = $(LIGHTBOX_TEMPLATE).hide();
   }
 
-  imgLoad($loadedImg) {
-    var top;
+  loadImage($loadedImg) {
+    let top;
 
     $body.removeClass('lightbox-loading');
     $body.append(this.$view);
     this.$view.fadeIn(FADE_TIME);
 
-    if ($activeImage) {
-      $activeImage.fadeOut(FADE_TIME, () => {
-        $activeImage.remove();
-        $activeImage = this.$view;
-        loading = false;
+    if (this.lightbox.$activeImage) {
+      this.lightbox.$activeImage.fadeOut(FADE_TIME, () => {
+        this.lightbox.$activeImage.remove();
+        this.lightbox.$activeImage = this.$view;
+        this.lightbox.isLoading = false;
       });
     }
     else {
-      $activeImage = this.$view;
-      loading = false;
+      this.lightbox.$activeImage = this.$view;
+      this.lightbox.isLoading = false;
     }
 
-    active = this.id;
+    this.lightbox.activeImageId = this.id;
     if ($loadedImg.height()) {
       top = ($(window).height() - $loadedImg.height()) / 2;
       this.$view.addClass('shown');
@@ -79,145 +71,153 @@ class LightboxImage {
       this.$view.find('.js-img-wrap').height($loadedImg.height());
     }
 
-    _setCloseIconColor(this.$view, bgColor);
+    this._setCloseIconColor(this.$view, this.lightbox.bgColor);
   }
 
   render() {
-    if (loading) {
+    if (this.lightbox.isLoading) {
       return;
     }
 
     var $img = this.$view.find('img');
-    loading = true;
+    this.lightbox.isLoading = true;
 
     $body.addClass('lightbox-active lightbox-loading');
 
-    if (single) {
+    if (this.lightbox.isSingle) {
       this.$view.addClass('single');
     }
 
-    if (active === false) {
-      bind();
-      $blocking.css({
-        backgroundColor: bgColor,
-        opacity: opacity
+    if (this.lightbox.activeImageId === false) {
+      this.lightbox.bind();
+      this.lightbox.$blocking.css({
+        backgroundColor: this.lightbox.bgColor,
+        opacity: this.lightbox.opacity
       });
-      $body.append($blocking);
+      $body.append(this.lightbox.$blocking);
     }
 
     $img.attr('src', this.src);
     // because IOS doesnt fire load for cached images,
     // but luckily this will be true immediately if that is the case
     if ($img[0].complete) {
-      this.imgLoad($img);
+      this.loadImage($img);
     }
     else {
       $img.on('load', () => {
-        this.imgLoad($img);
+        this.loadImage($img);
       });
     }
   }
+
+  _setCloseIconColor($context, bgColor) {
+    var tinyBgColor = tinycolor(bgColor);
+    var closeIconColor = tinyBgColor.isLight() ? '#000' : '#FFF';
+    var $svg = $context.find('.js-close svg');
+
+    if($svg.attr('fill')) {
+      return;
+    }
+
+    $svg.attr('fill', closeIconColor);
+  }
 };
 
-function close() {
-  if (loading || active === false) {
-    return;
+class Lightbox {
+  constructor(options) {
+    const config = $.extend({
+      context: document.body,
+      imageSelector: '.js-lightbox',
+      imageSrcDataAttr: 'src',
+      bgColor: '#fff',
+      opacity: '0.94'
+    }, options);
+
+    this.$blocking = $(BACKDROP_TEMPLATE);
+    this.images = [];
+    this.activeImageId = false;
+    this.isLoading = false;
+    this.isSingle = false;
+    this.$context = $(config.context);
+    this.bgColor = config.bgColor;
+    this.opacity = config.opacity;
+
+    this.$context.find(config.imageSelector).each((i, el) => {
+      const $img = $(el);
+      $img.data('img-id', i).addClass('lightbox-link');
+      this.images[i] = new LightboxImage(this, $img.data(config.imageSrcDataAttr), i);
+    });
+
+    const self = this;
+    this.$context.find(`:not(a) > ${config.imageSelector}`).on('click', function (e) {
+      e.stopPropagation();
+      self.images[$(this).data('img-id')].render();
+    });
+
+    if (this.images.length === 1) {
+      this.isSingle = true;
+    }
   }
 
-  $body.add($context).off('click.lightbox');
-  $activeImage.fadeOut(FADE_TIME, function() {
-    $activeImage.remove();
-    $activeImage = null;
-    $body.find($blocking).remove();
-    $body.removeClass('lightbox-active');
-    active = false;
-  });
-}
-
-function next() {
-  images[(images[active+1]) ? active+1 : 0].render();
-}
-
-function prev() {
-  images[(images[active-1]) ? active-1 : images.length-1].render();
-}
-
-function bind() {
-  $body.on('click.lightbox', function() {
-    close();
-  });
-
-  $(document).on('keyup.lightbox', function(e) {
-    if (e.keyCode === ESCAPE_KEYCODE) {
-      close();
+  close() {
+    if (this.isLoading || this.activeImageId === false) {
+      return;
     }
-  });
 
-  if (single) {
-    return;
+    $body.add(this.$context).off('click.lightbox');
+    this.$activeImage.fadeOut(FADE_TIME, () => {
+      this.$activeImage.remove();
+      this.$activeImage = null;
+      $body.find(this.$blocking).remove();
+      $body.removeClass('lightbox-active');
+      this.activeImageId = false;
+    });
   }
 
-  $context.on('click.lightbox', '.js-next', function(e) {
-    e.stopPropagation();
-    next();
-  });
-
-  $context.on('click.lightbox', '.js-prev', function(e) {
-    e.stopPropagation();
-    prev();
-  });
-
-  $(document).on('keyup.lightbox', function(e) {
-    if (e.keyCode === LEFT_ARROW_KEYCODE) {
-      prev();
-    }
-    else if (e.keyCode === RIGHT_ARROW_KEYCODE) {
-      next();
-    }
-  });
-}
-
-function _setCloseIconColor($context, bgColor) {
-  var tinyBgColor = tinycolor(bgColor);
-  var closeIconColor = tinyBgColor.isLight() ? '#000' : '#FFF';
-  var $svg = $context.find('.js-close svg');
-
-  if($svg.attr('fill')) {
-    return;
+  next() {
+    this.images[(this.images[this.activeImageId+1]) ? this.activeImageId+1 : 0].render();
   }
 
-  $svg.attr('fill', closeIconColor);
-}
+  prev() {
+    this.images[(this.images[this.activeImageId-1]) ? this.activeImageId-1 : this.images.length-1].render();
+  }
 
-function init(options) {
-  const config = $.extend({
-    context: document.body,
-    imageSelector: '.js-lightbox',
-    imageSrcDataAttr: 'src',
-    bgColor: '#fff',
-    opacity: '0.94'
-  }, options);
+  bind() {
+    $body.on('click.lightbox', () => {
+      this.close();
+    });
 
-  $context = $(config.context);
-  bgColor = config.bgColor;
-  opacity = config.opacity;
+    $(document).on('keyup.lightbox', (e) => {
+      if (e.keyCode === ESCAPE_KEYCODE) {
+        this.close();
+      }
+    });
 
-  $context.find(config.imageSelector).each((i, el) => {
-    const $img = $(el);
-    $img.data('img-id', i).addClass('lightbox-link');
-    images[i] = new LightboxImage($img.data(config.imageSrcDataAttr), i);
-  });
+    if (this.isSingle) {
+      return;
+    }
 
-  $context.find(`:not(a) > ${config.imageSelector}`).on('click', function(e) {
-    e.stopPropagation();
-    images[$(this).data('img-id')].render();
-  });
+    this.$context.on('click.lightbox', '.js-next', (e) => {
+      e.stopPropagation();
+      this.next();
+    });
 
-  if (images.length === 1) {
-    single = true;
+    this.$context.on('click.lightbox', '.js-prev', (e) => {
+      e.stopPropagation();
+      this.prev();
+    });
+
+    $(document).on('keyup.lightbox', (e) => {
+      if (e.keyCode === LEFT_ARROW_KEYCODE) {
+        this.prev();
+      }
+      else if (e.keyCode === RIGHT_ARROW_KEYCODE) {
+        this.next();
+      }
+    });
   }
 }
 
 export default {
-  init: init
+  init: (options) => new Lightbox(options)
 };
