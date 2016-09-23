@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import lightbox from '../../lightbox';
+import lightbox from '../..';
 
 describe('lightbox', function() {
   const FADE_TIME = 200;

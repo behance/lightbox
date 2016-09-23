@@ -9,6 +9,7 @@ module.exports = function(config) {
       'jasmine'
     ],
     files: [
+      require.resolve('es6-shim'),
       'node_modules/jquery/dist/jquery.js',
       'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
       'node_modules/jasmine-fixture/dist/jasmine-fixture.js',

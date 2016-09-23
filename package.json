@@ -2,7 +2,7 @@
   "name": "lightbox",
   "version": "3.2.0",
   "description": "Image lightbox",
-  "main": "lightbox.js",
+  "main": "src",
   "scripts": {
     "test": "npm run eslint && npm run karma -- --single-run",
     "eslint": "eslint src/**/*.js test/**/*.js",
@@ -28,6 +28,7 @@
     "babel-loader": "^6.2.5",
     "babel-preset-behance": "^2.0.0",
     "css-loader": "^0.25.0",
+    "es6-shim": "^0.35.1",
     "eslint": "^3.5.0",
     "eslint-plugin-behance": "^1.0.0",
     "eslint-preset-behance": "^4.0.0",

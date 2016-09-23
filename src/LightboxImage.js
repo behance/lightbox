@@ -1,12 +1,6 @@
 import $ from 'jquery';
 import tinycolor from 'tinycolor2';
-import 'style!./sass/lightbox.scss';
 
-const ESCAPE_KEYCODE = 27;
-const LEFT_ARROW_KEYCODE = 37;
-const RIGHT_ARROW_KEYCODE = 39;
-const FADE_TIME = 200;
-const BACKDROP_TEMPLATE = '<div class="js-blocking" id="lightbox-blocking"></div>';
 const LIGHTBOX_TEMPLATE = `
   <div class="js-lightbox-wrap" id="lightbox-wrap">
     <div class="js-lightbox-inner-wrap" id="lightbox-inner-wrap">
@@ -34,9 +28,8 @@ const LIGHTBOX_TEMPLATE = `
     </div>
   </div>
 `;
-const $body = $(document.body);
 
-class LightboxImage {
+export default class LightboxImage {
   constructor(lightbox, src, id) {
     this.lightbox = lightbox;
     this.src = src;
@@ -47,12 +40,12 @@ class LightboxImage {
   loadImage($loadedImg) {
     let top;
 
-    $body.removeClass('lightbox-loading');
-    $body.append(this.$view);
-    this.$view.fadeIn(FADE_TIME);
+    this.lightbox.$body.removeClass('lightbox-loading');
+    this.lightbox.$body.append(this.$view);
+    this.$view.fadeIn(this.lightbox.fadeTimeInMs);
 
     if (this.lightbox.$activeImage) {
-      this.lightbox.$activeImage.fadeOut(FADE_TIME, () => {
+      this.lightbox.$activeImage.fadeOut(this.lightbox.fadeTimeInMs, () => {
         this.lightbox.$activeImage.remove();
         this.lightbox.$activeImage = this.$view;
         this.lightbox.isLoading = false;
@@ -79,10 +72,10 @@ class LightboxImage {
       return;
     }
 
-    var $img = this.$view.find('img');
+    const $img = this.$view.find('img');
     this.lightbox.isLoading = true;
 
-    $body.addClass('lightbox-active lightbox-loading');
+    this.lightbox.$body.addClass('lightbox-active lightbox-loading');
 
     if (this.lightbox.isSingle) {
       this.$view.addClass('single');
@@ -94,7 +87,7 @@ class LightboxImage {
         backgroundColor: this.lightbox.bgColor,
         opacity: this.lightbox.opacity
       });
-      $body.append(this.lightbox.$blocking);
+      this.lightbox.$body.append(this.lightbox.$blocking);
     }
 
     $img.attr('src', this.src);
@@ -111,113 +104,14 @@ class LightboxImage {
   }
 
   _setCloseIconColor($context, bgColor) {
-    var tinyBgColor = tinycolor(bgColor);
-    var closeIconColor = tinyBgColor.isLight() ? '#000' : '#FFF';
-    var $svg = $context.find('.js-close svg');
+    const tinyBgColor = tinycolor(bgColor);
+    const closeIconColor = tinyBgColor.isLight() ? '#000' : '#FFF';
+    const $svg = $context.find('.js-close svg');
 
-    if($svg.attr('fill')) {
+    if ($svg.attr('fill')) {
       return;
     }
 
     $svg.attr('fill', closeIconColor);
   }
-};
-
-class Lightbox {
-  constructor(options) {
-    const config = $.extend({
-      context: document.body,
-      imageSelector: '.js-lightbox',
-      imageSrcDataAttr: 'src',
-      bgColor: '#fff',
-      opacity: '0.94'
-    }, options);
-
-    this.$blocking = $(BACKDROP_TEMPLATE);
-    this.images = [];
-    this.activeImageId = false;
-    this.isLoading = false;
-    this.isSingle = false;
-    this.$context = $(config.context);
-    this.bgColor = config.bgColor;
-    this.opacity = config.opacity;
-
-    this.$context.find(config.imageSelector).each((i, el) => {
-      const $img = $(el);
-      $img.data('img-id', i).addClass('lightbox-link');
-      this.images[i] = new LightboxImage(this, $img.data(config.imageSrcDataAttr), i);
-    });
-
-    const self = this;
-    this.$context.find(`:not(a) > ${config.imageSelector}`).on('click', function (e) {
-      e.stopPropagation();
-      self.images[$(this).data('img-id')].render();
-    });
-
-    if (this.images.length === 1) {
-      this.isSingle = true;
-    }
-  }
-
-  close() {
-    if (this.isLoading || this.activeImageId === false) {
-      return;
-    }
-
-    $body.add(this.$context).off('click.lightbox');
-    this.$activeImage.fadeOut(FADE_TIME, () => {
-      this.$activeImage.remove();
-      this.$activeImage = null;
-      $body.find(this.$blocking).remove();
-      $body.removeClass('lightbox-active');
-      this.activeImageId = false;
-    });
-  }
-
-  next() {
-    this.images[(this.images[this.activeImageId+1]) ? this.activeImageId+1 : 0].render();
-  }
-
-  prev() {
-    this.images[(this.images[this.activeImageId-1]) ? this.activeImageId-1 : this.images.length-1].render();
-  }
-
-  bind() {
-    $body.on('click.lightbox', () => {
-      this.close();
-    });
-
-    $(document).on('keyup.lightbox', (e) => {
-      if (e.keyCode === ESCAPE_KEYCODE) {
-        this.close();
-      }
-    });
-
-    if (this.isSingle) {
-      return;
-    }
-
-    this.$context.on('click.lightbox', '.js-next', (e) => {
-      e.stopPropagation();
-      this.next();
-    });
-
-    this.$context.on('click.lightbox', '.js-prev', (e) => {
-      e.stopPropagation();
-      this.prev();
-    });
-
-    $(document).on('keyup.lightbox', (e) => {
-      if (e.keyCode === LEFT_ARROW_KEYCODE) {
-        this.prev();
-      }
-      else if (e.keyCode === RIGHT_ARROW_KEYCODE) {
-        this.next();
-      }
-    });
-  }
 }
-
-export default {
-  init: (options) => new Lightbox(options)
-};
