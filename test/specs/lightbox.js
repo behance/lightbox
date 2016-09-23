@@ -1,6 +1,3 @@
-/* eslint-env jasmine */
-/* global affix */
-
 import $ from 'jquery';
 import lightbox from '../../lightbox';
 
