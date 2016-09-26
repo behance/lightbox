@@ -5,6 +5,7 @@
 # OSX os files
 .DS_Store
 .DS_Store?
+npm-debug.log
 
 # SASS
 .sass-cache
