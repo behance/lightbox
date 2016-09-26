@@ -63,4 +63,15 @@ describe('lightbox', function() {
       });
     });
   });
+
+  it('should hide non-img elements such as the close class after inactivify', function(done) {
+    lightbox.init({ idleTimeInMs: 10 });
+    $(LIGHTBOX_CLASS).first().click();
+    tempWait(() => {
+      setTimeout(() => {
+        expect($(CLOSE_CLASS).css('opacity')).toBeLessThan(1);
+        done();
+      }, 15);
+    });
+  });
 });
