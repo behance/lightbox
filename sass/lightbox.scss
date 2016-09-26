@@ -19,6 +19,13 @@ $button-padding: 40px;
   cursor: pointer;
 }
 
+%user-select-none {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 #lightbox-blocking {
   height: 100%;
   left: 0;
@@ -44,6 +51,9 @@ $button-padding: 40px;
   }
 
   img {
+    @extend %user-select-none;
+
+    cursor: zoom-out;
     display: inline-block;
     max-height: 100%;
     max-width: 100%;
@@ -77,9 +87,22 @@ $button-padding: 40px;
 
   .control {
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     z-index: 1003;
   }
+
+  svg {
+
+    .lightbox-icon-bg {
+      fill: #696969;
+      opacity: .2;
+    }
+
+    &:hover .lightbox-icon-bg {
+      opacity: .4;
+    }
+
+  }  //svg
 
   .next,
   .prev {
@@ -87,7 +110,7 @@ $button-padding: 40px;
     height: 100%;
     opacity: 0;
     top: 0;
-    width: 50%;
+    width: 33.3%;
 
     &:hover {
       opacity: 1;
@@ -97,12 +120,6 @@ $button-padding: 40px;
 
       @include calc('top', '50% - 15px');
       position: absolute;
-
-      .lightbox-icon-bg {
-        opacity: .1;
-        fill: #26262A;
-        enable-background: new;
-      }
 
       .lightbox-icon-arrow {
         fill:#FFFFFF;
@@ -135,13 +152,17 @@ $button-padding: 40px;
   .close {
 
     position: fixed;
-    height: 24px;
+    height: 40px;
     right: 40px;
     top: 40px;
-    width: 24px;
+    width: 40px;
 
     &:hover {
       cursor: pointer;
+    }
+
+    .lightbox-icon-bg {
+      fill: #fff;
     }
 
   } // .close
