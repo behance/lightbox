@@ -75,6 +75,11 @@ $button-padding: 40px;
 
   } // &.single
 
+  &.extras-hidden #lightbox-img-wrap > :not(img) {
+    opacity: 0;
+    transition: 1s;
+  }
+
 } // #lightbox-wrap
 
 #lightbox-inner-wrap {

@@ -28,6 +28,7 @@ const LIGHTBOX_TEMPLATE = `
     </div>
   </div>
 `;
+const EXTRAS_HIDDEN_CLASS = 'extras-hidden';
 
 export default class LightboxImage {
   constructor(lightbox, src, id) {
@@ -65,6 +66,14 @@ export default class LightboxImage {
     }
 
     this._setCloseIconColor(this.$view, this.lightbox.bgColor);
+  }
+
+  showExtras() {
+    this.$view.removeClass(EXTRAS_HIDDEN_CLASS);
+  }
+
+  hideExtras() {
+    this.$view.addClass(EXTRAS_HIDDEN_CLASS);
   }
 
   render() {

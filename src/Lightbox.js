@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import idleTimer from 'idle-timer';
 import LightboxImage from './LightboxImage';
 
 const BACKDROP_TEMPLATE = '<div class="js-blocking" id="lightbox-blocking"></div>';
@@ -10,6 +11,7 @@ export default class Lightbox {
   constructor(options) {
     const config = Object.assign({
       context: document.body,
+      idleTimeInMs: 5000,
       imageSelector: '.js-lightbox',
       imageSrcDataAttr: 'src',
       bgColor: '#fff',
@@ -26,6 +28,7 @@ export default class Lightbox {
     this.$context = $(config.context);
     this.bgColor = config.bgColor;
     this.opacity = config.opacity;
+    this.config = config;
 
     this.$context.find(config.imageSelector).each((i, el) => {
       const $img = $(el);
@@ -49,6 +52,7 @@ export default class Lightbox {
       return;
     }
 
+    this._destroyIdleTimer();
     this.$body.add(this.$context).off('click.lightbox');
     this.$activeImage.fadeOut(this.fadeTimeInMs, () => {
       this.$activeImage.remove();
@@ -100,5 +104,25 @@ export default class Lightbox {
         this.next();
       }
     });
+
+    this._initIdleTimer();
+  }
+
+  _initIdleTimer() {
+    this._idleTimer = idleTimer({
+      callback: () => this._getActiveLightboxImage().hideExtras(),
+      activeCallback: () => this._getActiveLightboxImage().showExtras(),
+      idleTime: this.config.idleTimeInMs
+    });
+  }
+
+  _destroyIdleTimer() {
+    if (this._idleTimer) {
+      this._idleTimer.destroy();
+    }
+  }
+
+  _getActiveLightboxImage() {
+    return this.images[this.activeImageId];
   }
 }
