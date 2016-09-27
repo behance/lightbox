@@ -64,7 +64,7 @@ describe('lightbox', function() {
     });
   });
 
-  it('should hide non-img elements such as the close class after inactivify', function(done) {
+  it('should hide non-img elements such as the close class after inactivity', function(done) {
     lightbox.init({ idleTimeInMs: 10 });
     $(LIGHTBOX_CLASS).first().click();
     tempWait(() => {
