@@ -74,4 +74,17 @@ describe('lightbox', function() {
       }, 15);
     });
   });
+
+  it('should support data-picture in the lightbox image', function(done) {
+    affix(`.picture-lightbox[data-picture="${JSON.stringify({
+      sources: [{ srcset: imagePath(1), media_query: '(min-width: 1px)' }],
+      img: { src: imagePath(1) }
+    }).replace(/"/g, '&quot;')}"] img[style="width:50px;height:50px"]`);
+    lightbox.init({ imageSelector: '.picture-lightbox' });
+    $('.picture-lightbox').first().click();
+    tempWait(() => {
+      expect($('img[src$="1.png"]')).toBeVisible();
+      done();
+    });
+  });
 });

@@ -33,7 +33,9 @@ export default class Lightbox {
     this.$context.find(config.imageSelector).each((i, el) => {
       const $img = $(el);
       $img.data('img-id', i).addClass('lightbox-link');
-      this.images[i] = new LightboxImage(this, $img.data(config.imageSrcDataAttr), i);
+      this.images[i] = new LightboxImage(this,
+        $img.data('picture') || $img.data(config.imageSrcDataAttr),
+        i);
     });
 
     const self = this;
@@ -58,7 +60,7 @@ export default class Lightbox {
       this.$activeImage.remove();
       this.$activeImage = null;
       this.$body.find(this.$blocking).remove();
-      this.$body.removeClass('lightbox-active');
+      $('html').removeClass('lightbox-active');
       this.activeImageId = false;
     });
   }

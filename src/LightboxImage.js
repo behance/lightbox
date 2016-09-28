@@ -23,7 +23,7 @@ const LIGHTBOX_TEMPLATE = `
             <polygon class="lightbox-icon-close" points="64.5,39.8 60.2,35.5 50,45.7 39.8,35.5 35.5,39.8 45.7,50 35.5,60.2 39.8,64.5 50,54.3 60.2,64.5 64.5,60.2 54.3,50"/>
           </svg>
         </div>
-        <img/>
+        <div class="lightbox-contents js-contents"></div>
       </div>
     </div>
   </div>
@@ -38,10 +38,7 @@ export default class LightboxImage {
     this.$view = $(LIGHTBOX_TEMPLATE).hide();
   }
 
-  loadImage($loadedImg) {
-    let top;
-
-    this.lightbox.$body.removeClass('lightbox-loading');
+  appendWrap() {
     this.lightbox.$body.append(this.$view);
     this.$view.fadeIn(this.lightbox.fadeTimeInMs);
 
@@ -58,14 +55,8 @@ export default class LightboxImage {
     }
 
     this.lightbox.activeImageId = this.id;
-    if ($loadedImg.height()) {
-      top = ($(window).height() - $loadedImg.height()) / 2;
-      this.$view.addClass('shown');
-      this.$view.css('top', top);
-      this.$view.find('.js-img-wrap').height($loadedImg.height());
-    }
-
     this._setCloseIconColor(this.$view, this.lightbox.bgColor);
+    this.$view.addClass('shown');
   }
 
   showExtras() {
@@ -81,10 +72,12 @@ export default class LightboxImage {
       return;
     }
 
-    const $img = this.$view.find('img');
+    const $contents = this.$view.find('.js-contents');
+    const isSrcPicture = (typeof this.src === 'object');
+
     this.lightbox.isLoading = true;
 
-    this.lightbox.$body.addClass('lightbox-active lightbox-loading');
+    $('html').addClass('lightbox-active');
 
     if (this.lightbox.isSingle) {
       this.$view.addClass('single');
@@ -99,17 +92,25 @@ export default class LightboxImage {
       this.lightbox.$body.append(this.lightbox.$blocking);
     }
 
-    $img.attr('src', this.src);
-    // because IOS doesnt fire load for cached images,
-    // but luckily this will be true immediately if that is the case
-    if ($img[0].complete) {
-      this.loadImage($img);
+    $contents.empty();
+
+    if (isSrcPicture) {
+      const $picture = $('<picture />');
+
+      this.src.sources.forEach(({ srcset, media_query: media }) => {
+        $('<source />', { srcset, media }).appendTo($picture);
+      });
+
+      const { src, alt } = this.src.img;
+      $('<img />', { src, alt }).appendTo($picture);
+
+      $picture.appendTo($contents);
     }
     else {
-      $img.on('load', () => {
-        this.loadImage($img);
-      });
+      $('<img />', { src: this.src }).appendTo($contents);
     }
+
+    this.appendWrap();
   }
 
   _setCloseIconColor($context, bgColor) {
