@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run eslint && npm run karma -- --single-run",
     "eslint": "eslint src/**/*.js test/**/*.js",
-    "karma": "karma start test/karma.conf.js"
+    "karma": "karma start test/karma.conf.js",
+    "examples-simple": "webpack-dev-server --content-base examples/simple --config ./test/webpack.config.js --entry ./examples/simple"
   },
   "repository": {
     "type": "git",
@@ -20,17 +21,17 @@
   "homepage": "https://github.com/behance/lightbox#readme",
   "dependencies": {
     "idle-timer": "nemtsov/idle-timer#6061205",
-    "jquery": "~2.1.1",
-    "tinycolor2": "^1.3.0"
+    "jquery": "~3.1.1",
+    "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",
-    "babel-core": "^6.14.0",
+    "babel-core": "^6.16.0",
     "babel-loader": "^6.2.5",
     "babel-preset-behance": "^2.0.0",
     "css-loader": "^0.25.0",
     "es6-shim": "^0.35.1",
-    "eslint": "^3.5.0",
+    "eslint": "^3.7.0",
     "eslint-plugin-behance": "^1.0.0",
     "eslint-preset-behance": "^4.0.0",
     "jasmine-core": "^2.5.2",
@@ -43,9 +44,10 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.8.0",
     "node-bourbon": "^4.2.8",
-    "node-sass": "^3.10.0",
+    "node-sass": "^3.10.1",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
-    "webpack": "^2.1.0-beta.25"
+    "webpack": "^2.1.0-beta.25",
+    "webpack-dev-server": "^2.1.0-beta.7"
   }
 }
