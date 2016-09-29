@@ -6,15 +6,6 @@ $button-padding: 40px;
   #{$property}: calc(#{$params}) #{$important};
 }
 
-.lightbox-active {
-  overflow: hidden;
-}
-
-.lightbox-loading,
-.lightbox-loading * {
-  cursor: wait;
-}
-
 .lightbox-link {
   cursor: pointer;
 }
@@ -27,16 +18,17 @@ $button-padding: 40px;
 }
 
 #lightbox-blocking {
-  height: 100%;
+  bottom: 0;
   left: 0;
   position: fixed;
+  right: 0;
   top: 0;
-  width: 100%;
   z-index: 1001;
 } // #lightbox-blocking
 
 #lightbox-wrap {
 
+  display: flex;
   height: 100%;
   left: 0;
   position: fixed;
@@ -50,7 +42,7 @@ $button-padding: 40px;
     visibility: visible;
   }
 
-  img {
+  .lightbox-contents {
     @extend %user-select-none;
 
     cursor: zoom-out;
@@ -58,7 +50,6 @@ $button-padding: 40px;
     max-height: 100%;
     max-width: 100%;
     position: relative;
-    width: auto;
   }
 
   &.single {
@@ -75,19 +66,21 @@ $button-padding: 40px;
 
   } // &.single
 
-  &.extras-hidden #lightbox-img-wrap > :not(img) {
+  &.extras-hidden #lightbox-img-wrap > :not(.lightbox-contents) {
     opacity: 0;
     transition: 1s;
+  }
+
+  img {
+    max-height: 100vh;
+    max-width: 100vw;
   }
 
 } // #lightbox-wrap
 
 #lightbox-inner-wrap {
 
-  height: 90%; // height must be set explicitly for img sizing
   margin: auto;
-  max-height: 90%;
-  max-width: 90%;
   position: relative;
 
   .control {
@@ -158,8 +151,8 @@ $button-padding: 40px;
 
     position: fixed;
     height: 40px;
-    right: 40px;
-    top: 40px;
+    right: 20px;
+    top: 20px;
     width: 40px;
 
     &:hover {
@@ -173,9 +166,3 @@ $button-padding: 40px;
   } // .close
 
 } // #lightbox-inner-wrap
-
-#lightbox-img-wrap {
-  display: inline-block;
-  height: 100%;
-  position: relative;
-}
