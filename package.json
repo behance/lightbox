@@ -21,14 +21,14 @@
   "homepage": "https://github.com/behance/lightbox#readme",
   "dependencies": {
     "idle-timer": "nemtsov/idle-timer#6061205",
-    "jquery": "~3.1.1",
+    "jquery": "~2.1.1",
     "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",
-    "babel-core": "^6.16.0",
+    "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
-    "babel-preset-behance": "^2.0.0",
+    "babel-preset-behance": "^3.0.0",
     "css-loader": "^0.25.0",
     "es6-shim": "^0.35.1",
     "eslint": "^3.7.0",

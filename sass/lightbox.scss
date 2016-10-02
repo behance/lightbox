@@ -34,13 +34,7 @@ $button-padding: 40px;
   position: fixed;
   text-align: center;
   top: 0;
-  visibility: hidden;
   width: 100%;
-  z-index: 1002;
-
-  &.shown {
-    visibility: visible;
-  }
 
   .lightbox-contents {
     @extend %user-select-none;
@@ -82,6 +76,7 @@ $button-padding: 40px;
 
   margin: auto;
   position: relative;
+  z-index: 1002;
 
   .control {
     cursor: pointer;
