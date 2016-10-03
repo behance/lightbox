@@ -34,6 +34,7 @@ node_modules/
 # composer packages & generated files
 packages.json
 /vendor/
+/example/dist/*
 /public/assets/js/vendor/
 
 # bundler installed bundles

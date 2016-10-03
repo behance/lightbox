@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-var bourbonIncludePaths = require('node-bourbon').includePaths;
+var webpackConfig = require('./webpack.config');
 
 module.exports = function(config) {
   config.set({
@@ -25,24 +25,7 @@ module.exports = function(config) {
     preprocessors: {
       'test/specs/**/*.js': ['webpack']
     },
-    webpack: {
-      externals: {
-        'jquery': 'jQuery'
-      },
-      module: {
-        rules: [{
-          test: /\.js$/,
-          loader: 'babel',
-          query: {
-            presets: ['behance']
-          }
-        }, {
-          test: /\.scss$/,
-          loader: 'css!sass?includePaths[]=' + bourbonIncludePaths,
-        }]
-      },
-      plugins: []
-    },
+    webpack: webpackConfig,
     reporters: ['progress', 'coverage'],
     port: 9876,
     colors: true,

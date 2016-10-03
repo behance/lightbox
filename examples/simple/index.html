@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Example</title>
+    <style>
+      body { width: 350px; margin: 50px auto; }
+    </style>
+  </head>
+  <body>
+    <div class="project">
+      <div class="project-image" data-picture='{
+        "img": { "src": "http://placehold.it/250x150" },
+        "sources": [{
+          "srcset": "http://placehold.it/550x450",
+          "media_query": "(min-width: 1px)"
+        }]
+      }'>
+        <img alt="first" width="350" height="150"
+          src="http://placehold.it/350x150" />
+      </div>
+
+      <div class="project-image" data-picture='{
+        "img": { "src": "http://placehold.it/250x160" },
+        "sources": [{
+          "srcset": "http://placehold.it/550x460",
+          "media_query": "(min-width: 1px)"
+        }]
+      }'>
+        <img alt="second" width="350" height="160"
+          src="http://placehold.it/350x160" />
+      </div>
+
+      <div class="project-image" data-picture='{
+        "img": { "src": "http://placehold.it/250x170" },
+        "sources": [{
+          "srcset": "http://placehold.it/550x470",
+          "media_query": "(min-width: 1px)"
+        }]
+      }'>
+        <img alt="third" width="350" height="170"
+          src="http://placehold.it/350x170" />
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="/bundle.js"></script>
+  </body>
+</html>

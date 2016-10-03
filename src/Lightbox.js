@@ -1,130 +1,83 @@
 import $ from 'jquery';
-import idleTimer from 'idle-timer';
-import LightboxImage from './LightboxImage';
-
-const BACKDROP_TEMPLATE = '<div class="js-blocking" id="lightbox-blocking"></div>';
-const ESCAPE_KEYCODE = 27;
-const LEFT_ARROW_KEYCODE = 37;
-const RIGHT_ARROW_KEYCODE = 39;
+import Chrome from './Chrome';
 
 export default class Lightbox {
-  constructor(options) {
-    const config = Object.assign({
+  constructor(props) {
+    this._props = Object.assign({
       context: document.body,
       idleTimeInMs: 5000,
       imageSelector: '.js-lightbox',
       imageSrcDataAttr: 'src',
       bgColor: '#fff',
-      opacity: '0.94'
-    }, options);
+      opacity: '0.94',
+      isCircular: true
+    }, props);
 
-    this.fadeTimeInMs = 200;
-    this.$body = $(document.body);
-    this.$blocking = $(BACKDROP_TEMPLATE);
-    this.images = [];
-    this.activeImageId = false;
-    this.isLoading = false;
-    this.isSingle = false;
-    this.$context = $(config.context);
-    this.bgColor = config.bgColor;
-    this.opacity = config.opacity;
-    this.config = config;
+    this._$context = $(this._props.context);
+    this._$links = this._$context.find(`:not(a) > ${this._props.imageSelector}`);
+    this._slides = this._createSlides(this._$links);
 
-    this.$context.find(config.imageSelector).each((i, el) => {
-      const $img = $(el);
-      $img.data('img-id', i).addClass('lightbox-link');
-      this.images[i] = new LightboxImage(this,
-        $img.data('picture') || $img.data(config.imageSrcDataAttr),
-        i);
+    this._chrome = new Chrome({
+      $context: this._$context,
+      onnext: () => this.next(),
+      onprev: () => this.prev(),
+      onclose: () => this.close(),
+      bgColor: this._props.bgColor,
+      opacity: this._props.opacity,
+      imageSrcDataAttr: this._props.imageSrcDataAttr,
+      idleTimeInMs: this._props.idleTimeInMs,
     });
 
+    this.init();
+  }
+
+  init() {
     const self = this;
-    this.$context.find(`:not(a) > ${config.imageSelector}`).on('click', function(e) {
+    this._$links.addClass('lightbox-link').click(function(e) {
       e.stopPropagation();
-      self.images[$(this).data('img-id')].render();
+      self.open(self._slides.filter(slide => slide.$node.is(this))[0]);
     });
+  }
 
-    if (this.images.length === 1) {
-      this.isSingle = true;
-    }
+  destroy() {
+    this._$links.removeClass('lightbox-link').off('click');
+    this.close();
+  }
+
+  open(slide) {
+    this._chrome.init();
+    this._activeSlideId = slide.id;
+    this._chrome.renderSlide(slide);
   }
 
   close() {
-    if (this.isLoading || this.activeImageId === false) {
-      return;
-    }
-
-    this._destroyIdleTimer();
-    this.$body.add(this.$context).off('click.lightbox');
-    this.$activeImage.fadeOut(this.fadeTimeInMs, () => {
-      this.$activeImage.remove();
-      this.$activeImage = null;
-      this.$body.find(this.$blocking).remove();
-      $('html').removeClass('lightbox-active');
-      this.activeImageId = false;
-    });
+    this._chrome.destroy();
   }
 
   next() {
-    this.images[(this.images[this.activeImageId + 1]) ? this.activeImageId + 1 : 0].render();
+    const next = this._slides[this._activeSlideId + 1];
+    const firstId = 0;
+    const nextId = this._activeSlideId + 1;
+    if (!this._props.isCircular && !next) { return; }
+    this._activeSlideId = next ? nextId : firstId;
+    this._chrome.renderSlide(this._slides[this._activeSlideId]);
   }
 
   prev() {
-    this.images[(this.images[this.activeImageId - 1]) ? this.activeImageId - 1 : this.images.length - 1].render();
+    const prev = this._slides[this._activeSlideId - 1];
+    const lastId = this._slides.length - 1;
+    const prevId = this._activeSlideId - 1;
+    if (!this._props.isCircular && !prev) { return; }
+    this._activeSlideId = prev ? prevId : lastId;
+    this._chrome.renderSlide(this._slides[this._activeSlideId]);
   }
 
-  bind() {
-    this.$body.on('click.lightbox', () => {
-      this.close();
-    });
-
-    $(document).on('keyup.lightbox', (e) => {
-      if (e.keyCode === ESCAPE_KEYCODE) {
-        this.close();
-      }
-    });
-
-    if (this.isSingle) {
-      return;
-    }
-
-    this.$context.on('click.lightbox', '.js-next', (e) => {
-      e.stopPropagation();
-      this.next();
-    });
-
-    this.$context.on('click.lightbox', '.js-prev', (e) => {
-      e.stopPropagation();
-      this.prev();
-    });
-
-    $(document).on('keyup.lightbox', (e) => {
-      if (e.keyCode === LEFT_ARROW_KEYCODE) {
-        this.prev();
-      }
-      else if (e.keyCode === RIGHT_ARROW_KEYCODE) {
-        this.next();
-      }
-    });
-
-    this._initIdleTimer();
-  }
-
-  _initIdleTimer() {
-    this._idleTimer = idleTimer({
-      callback: () => this._getActiveLightboxImage().hideExtras(),
-      activeCallback: () => this._getActiveLightboxImage().showExtras(),
-      idleTime: this.config.idleTimeInMs
-    });
-  }
-
-  _destroyIdleTimer() {
-    if (this._idleTimer) {
-      this._idleTimer.destroy();
-    }
-  }
-
-  _getActiveLightboxImage() {
-    return this.images[this.activeImageId];
+  _createSlides($links) {
+    return $links
+      .toArray()
+      .map((node, i) => ({
+        id: i,
+        $node: $(node)
+      }));
   }
 }
