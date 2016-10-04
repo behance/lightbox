@@ -6,7 +6,7 @@ export default class Controller {
     this._$context = $context;
     this._$eventNode = $('<e/>');
     this._$links = this._$context.find(`:not(a) > ${this._props.imageSelector}`);
-    this._slides = this._createSlides(this._$links);
+    this.slides = this._createSlides(this._$links);
     this._bind();
   }
 
@@ -23,8 +23,8 @@ export default class Controller {
   }
 
   open(slideId) {
-    const slide = this._slides[slideId];
-    this._activeSlideId = slide.id;
+    const slide = this.slides[slideId];
+    this.activeSlide = slide;
     this._trigger('open', [slide]);
   }
 
@@ -33,35 +33,21 @@ export default class Controller {
   }
 
   next() {
-    const next = this._slides[this._activeSlideId + 1];
+    const nextId = this.activeSlide.id + 1;
+    const next = this.slides[nextId];
     if (!this._props.isCircular && !next) { return; }
-
     const firstId = 0;
-    const nextId = this._activeSlideId + 1;
-    this._activeSlideId = next ? nextId : firstId;
-    const activeSlide = this._slides[this._activeSlideId];
-
-    this._trigger('next', activeSlide);
+    this.activeSlide = this.slides[next ? nextId : firstId];
+    this._trigger('next', this.activeSlide);
   }
 
   prev() {
-    const prev = this._slides[this._activeSlideId - 1];
+    const prevId = this.activeSlide.id - 1;
+    const prev = this.slides[prevId];
     if (!this._props.isCircular && !prev) { return; }
-
-    const lastId = this._slides.length - 1;
-    const prevId = this._activeSlideId - 1;
-    this._activeSlideId = prev ? prevId : lastId;
-    const activeSlide = this._slides[this._activeSlideId];
-
-    this._trigger('prev', activeSlide);
-  }
-
-  hideExtras() {
-    this._trigger('extrasHidden');
-  }
-
-  showExtras() {
-    this._trigger('extrasShown');
+    const lastId = this.slides.length - 1;
+    this.activeSlide = this.slides[prev ? prevId : lastId];
+    this._trigger('prev', this.activeSlide);
   }
 
   destroy() {
@@ -74,7 +60,7 @@ export default class Controller {
     const self = this;
     this._$links.addClass('lightbox-link').click(function(e) {
       e.stopPropagation();
-      self.open(self._slides.filter(slide => slide.$node.is(this))[0].id);
+      self.open(self.slides.filter(slide => slide.$node.is(this))[0].id);
     });
   }
 

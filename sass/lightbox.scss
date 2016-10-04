@@ -110,6 +110,16 @@ $button-padding: 40px;
       opacity: 1;
     }
 
+    &.hidden {
+
+      cursor: default;
+
+      svg {
+        display: none;
+      }
+
+    } // .hidden
+
     svg {
 
       @include calc('top', '50% - 15px');

@@ -2,7 +2,7 @@ import $ from 'jquery';
 import lightbox from '../..';
 
 describe('lightbox', function() {
-  const FADE_TIME = 200;
+  const FADE_TIME = 5;
   const BLOCKING_CLASS = '.js-blocking';
   const LIGHTBOX_CLASS = '.js-lightbox';
   const NEXT_CLASS = '.js-next';

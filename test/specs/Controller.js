@@ -54,23 +54,6 @@ describe('Controller', function() {
     });
   });
 
-  describe('hideExtras', function() {
-    it('should trigger an "extrasHidden" event', function(done) {
-      this.unit.on('extrasHidden', done);
-      this.unit.open(0);
-      this.unit.hideExtras();
-    });
-  });
-
-  describe('showExtras', function() {
-    it('should trigger an "extrasShown" event', function(done) {
-      this.unit.on('extrasShown', done);
-      this.unit.open(0);
-      this.unit.hideExtras();
-      this.unit.showExtras();
-    });
-  });
-
   describe('off', function() {
     it('should remove an event listener', function(done) {
       this.unit.on('open', () => done.fail('should have removed listener'));
