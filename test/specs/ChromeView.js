@@ -8,6 +8,7 @@ const FIXTURE = `
     <img data-src="${imagePath(1)}" />
   </div>
 `;
+const CHROME_WRAP_CLASS = '.js-lightbox-wrap';
 const PREV_CLASS = '.js-prev';
 const NEXT_CLASS = '.js-next';
 const HIDDEN_CLASS = 'hidden';
@@ -24,14 +25,14 @@ describe('ChromeView', function() {
       'on', 'off', 'next', 'prev'
     ]);
     this.props = {};
-    this.set = (props) => {
+    this.set = (props, slides) => {
       Object.keys(props).forEach(key => this.props[key] = props[key]);
       this.$img = this.$context.find('img').first();
-      this.controller.slides = [
+      this.controller.slides = (slides || [
         { id: 0, $node: this.$img },
         { id: 1, $node: this.$img },
         { id: 2, $node: this.$img },
-      ];
+      ]);
       this.view = new ChromeView(this.$context, this.controller, this.props);
       this.listeners = this.controller.on.calls.first().args[0];
     };
@@ -67,6 +68,12 @@ describe('ChromeView', function() {
     this.listeners.open(this.controller.slides[1]);
     expectPrevToBeShown();
     expectNextToBeShown();
+  });
+
+  it('should render the html contents of a slide that has a data-contains-slide-contents="true" attr', function() {
+    this.set({}, [{ id: 0, $node: $('<div data-contains-slide-content="true"><button /></div>') }]);
+    this.listeners.open(this.controller.slides[0]);
+    expect($(CHROME_WRAP_CLASS)).toContainElement('button');
   });
 
   describe('prev', function() {

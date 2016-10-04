@@ -117,6 +117,9 @@ export default class ChromeView {
       const { src, alt } = picture.img;
       $('<img />', { src, alt }).appendTo($content);
     }
+    else if (slide.$node.data('containsSlideContent')) {
+      $content = slide.$node.html();
+    }
     else {
       $content = $('<img />', { src: src });
     }
