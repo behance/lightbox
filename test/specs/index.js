@@ -80,7 +80,7 @@ describe('lightbox', function() {
       sources: [{ srcset: imagePath(1), media_query: '(min-width: 1px)' }],
       img: { src: imagePath(1) }
     }).replace(/"/g, '&quot;')}"] img[style="width:50px;height:50px"]`);
-    lightbox.init({ imageSelector: '.picture-lightbox' });
+    lightbox.init({ slideSelector: '.picture-lightbox' });
     $('.picture-lightbox').first().click();
     tempWait(() => {
       expect($('img[src$="1.png"]')).toBeVisible();

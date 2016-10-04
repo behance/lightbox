@@ -107,7 +107,7 @@ export default class ChromeView {
 
   _getSlideContent(slide) {
     const picture = slide.$node.data('picture');
-    const src = slide.$node.data(this._props.imageSrcDataAttr);
+    const src = slide.$node.data('src');
     let $content;
     if (picture) {
       $content = $('<picture />');

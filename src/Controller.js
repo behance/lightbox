@@ -5,7 +5,7 @@ export default class Controller {
     this._props = props;
     this._$context = $context;
     this._$eventNode = $('<e/>');
-    this._$links = this._$context.find(`:not(a) > ${this._props.imageSelector}`);
+    this._$links = this._$context.find(`:not(a) > ${this._props.slideSelector}`);
     this.slides = this._createSlides(this._$links);
     this._bind();
   }
