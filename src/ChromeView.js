@@ -38,19 +38,21 @@ export default class ChromeView {
       .on('click.lightbox', '.js-prev', (e) => act('prev', e))
       .on('click.lightbox', (e) => act('close', e));
 
-    $(document).on('keydown.lightbox', (e) => {
-      switch (e.keyCode) {
-        case LEFT_ARROW_KEYCODE:
-          this._idleTimer.idle();
-          act('prev', e);
-          break;
-        case RIGHT_ARROW_KEYCODE:
-          this._idleTimer.idle();
-          act('next', e);
-          break;
-        case ESCAPE_KEYCODE: act('close', e); break;
-      }
-    });
+    $(document)
+      .on('mouseout.lightbox', () => this._idleTimer.idle())
+      .on('keydown.lightbox', (e) => {
+        switch (e.keyCode) {
+          case LEFT_ARROW_KEYCODE:
+            this._idleTimer.idle();
+            act('prev', e);
+            break;
+          case RIGHT_ARROW_KEYCODE:
+            this._idleTimer.idle();
+            act('next', e);
+            break;
+          case ESCAPE_KEYCODE: act('close', e); break;
+        }
+      });
 
     this._$view
       .find('.js-blocking')
