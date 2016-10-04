@@ -7,6 +7,7 @@ const ESCAPE_KEYCODE = 27;
 const LEFT_ARROW_KEYCODE = 37;
 const RIGHT_ARROW_KEYCODE = 39;
 const EXTRAS_HIDDEN_CLASS = 'extras-hidden';
+const HIDDEN_CLASS = 'hidden';
 
 export default class ChromeView {
   constructor($context, controller, props) {
@@ -15,18 +16,20 @@ export default class ChromeView {
     this._props = props;
     this._$view = $(lightboxTemplate);
     this._$contents = this._$view.find('.js-contents');
+    this._$prev = this._$view.find('.js-prev');
+    this._$next = this._$view.find('.js-next');
     this._bindToController();
   }
 
   init() {
     const act = (name, event) => {
-      if (event) { event.stopImmediatePropagation(); }
+      event.stopImmediatePropagation();
       this._controller[name]();
     };
 
     this._idleTimer = idleTimer({
-      callback: () => act('hideExtras'),
-      activeCallback: () => act('showExtras'),
+      callback: () => this.hideExtras(),
+      activeCallback: () => this.showExtras(),
       idleTime: this._props.idleTimeInMs
     });
 
@@ -67,6 +70,7 @@ export default class ChromeView {
   }
 
   renderSlide(slide) {
+    this._maybeHidePrevNext(slide);
     this._$contents.html(this._getSlideContent(slide));
   }
 
@@ -95,9 +99,7 @@ export default class ChromeView {
       open: slide => { this.init(); this.renderSlide(slide); },
       close: () => this.destroy(),
       prev: slide => this.renderSlide(slide),
-      next: slide => this.renderSlide(slide),
-      extrasHidden: slide => this.hideExtras(slide),
-      extrasShown: slide => this.showExtras(slide)
+      next: slide => this.renderSlide(slide)
     });
   }
 
@@ -117,5 +119,13 @@ export default class ChromeView {
       $content = $('<img />', { src: src });
     }
     return $content;
+  }
+
+  _maybeHidePrevNext(activeSlide) {
+    const hasPrev = this._controller.slides[activeSlide.id - 1];
+    const hasNext = this._controller.slides[activeSlide.id + 1];
+    if (this._props.isCircular && (hasPrev || hasNext)) { return; }
+    (hasPrev) ? this._$prev.removeClass(HIDDEN_CLASS) : this._$prev.addClass(HIDDEN_CLASS);
+    (hasNext) ? this._$next.removeClass(HIDDEN_CLASS) : this._$next.addClass(HIDDEN_CLASS);
   }
 }
