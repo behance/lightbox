@@ -38,19 +38,21 @@ export default class ChromeView {
       .on('click.lightbox', '.js-prev', (e) => act('prev', e))
       .on('click.lightbox', (e) => act('close', e));
 
-    $(document).on('keydown.lightbox', (e) => {
-      switch (e.keyCode) {
-        case LEFT_ARROW_KEYCODE:
-          this._idleTimer.idle();
-          act('prev', e);
-          break;
-        case RIGHT_ARROW_KEYCODE:
-          this._idleTimer.idle();
-          act('next', e);
-          break;
-        case ESCAPE_KEYCODE: act('close', e); break;
-      }
-    });
+    $(document)
+      .on('mouseout.lightbox', () => this._idleTimer.idle())
+      .on('keydown.lightbox', (e) => {
+        switch (e.keyCode) {
+          case LEFT_ARROW_KEYCODE:
+            this._idleTimer.idle();
+            act('prev', e);
+            break;
+          case RIGHT_ARROW_KEYCODE:
+            this._idleTimer.idle();
+            act('next', e);
+            break;
+          case ESCAPE_KEYCODE: act('close', e); break;
+        }
+      });
 
     this._$view
       .find('.js-blocking')
@@ -105,7 +107,7 @@ export default class ChromeView {
 
   _getSlideContent(slide) {
     const picture = slide.$node.data('picture');
-    const src = slide.$node.data(this._props.imageSrcDataAttr);
+    const src = slide.$node.data('src');
     let $content;
     if (picture) {
       $content = $('<picture />');
@@ -114,6 +116,9 @@ export default class ChromeView {
       });
       const { src, alt } = picture.img;
       $('<img />', { src, alt }).appendTo($content);
+    }
+    else if (slide.$node.data('containsSlideContent')) {
+      $content = slide.$node.html();
     }
     else {
       $content = $('<img />', { src: src });

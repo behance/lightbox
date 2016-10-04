@@ -1,7 +1,7 @@
 import lightbox from '../../';
 
 window.lightbox = lightbox.init({
-  imageSelector: '.project-image',
+  slideSelector: '.project-slide',
   bgColor: '#000',
   opacity: 0.7,
   isCircular: false

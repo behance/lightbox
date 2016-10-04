@@ -7,11 +7,10 @@ export default {
   init(props) {
     props = Object.assign({
       context: document.body,
-      idleTimeInMs: 5000,
-      imageSelector: '.js-lightbox',
-      imageSrcDataAttr: 'src',
+      slideSelector: '.js-lightbox',
       bgColor: '#fff',
       opacity: '0.94',
+      idleTimeInMs: 5000,
       isCircular: true
     }, props);
 
