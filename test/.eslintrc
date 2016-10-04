@@ -4,6 +4,7 @@
     "jasmine": true
   },
   "globals": {
-    "affix": true
+    "affix": true,
+    "setFixtures": true
   }
 }
