@@ -1,6 +1,6 @@
 {
   "name": "lightbox",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Image lightbox",
   "main": "src",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/behance/lightbox#readme",
   "dependencies": {
-    "idle-timer": "nemtsov/idle-timer#6061205",
+    "idle-timer": "git+https://github.com/nemtsov/idle-timer#8fc0007",
     "jquery": "~2.1.1",
     "tinycolor2": "^1.4.1"
   },
