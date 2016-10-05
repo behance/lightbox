@@ -38,7 +38,7 @@ describe('lightbox', function() {
 
   it('should render the blocking div when clicked on the lightbox node', function() {
     lightbox.init();
-    expect($(BLOCKING_CLASS)).not.toBeVisible();
+    expect($(BLOCKING_CLASS)).not.toBeInDOM();
     $(LIGHTBOX_CLASS).first().click();
     expect($(BLOCKING_CLASS)).toBeVisible();
   });
@@ -52,12 +52,12 @@ describe('lightbox', function() {
 
       expect($next).toBeVisible();
       expect($(img(1))).toBeVisible();
-      expect($(img(2))).not.toBeVisible();
+      expect($(img(2))).not.toBeInDOM();
 
       $next.click();
 
       tempWait(() => {
-        expect($(img(1))).not.toBeVisible();
+        expect($(img(1)).parent().css('opacity')).toBe('0');
         expect($(img(2))).toBeVisible();
         done();
       });
@@ -72,19 +72,6 @@ describe('lightbox', function() {
         expect($(CLOSE_CLASS).css('opacity')).toBeLessThan(1);
         done();
       }, 15);
-    });
-  });
-
-  it('should support data-picture in the lightbox image', function(done) {
-    affix(`.picture-lightbox[data-picture="${JSON.stringify({
-      sources: [{ srcset: imagePath(1), media_query: '(min-width: 1px)' }],
-      img: { src: imagePath(1) }
-    }).replace(/"/g, '&quot;')}"] img[style="width:50px;height:50px"]`);
-    lightbox.init({ slideSelector: '.picture-lightbox' });
-    $('.picture-lightbox').first().click();
-    tempWait(() => {
-      expect($('img[src$="1.png"]')).toBeVisible();
-      done();
     });
   });
 });

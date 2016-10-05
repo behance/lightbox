@@ -7,6 +7,7 @@ export default {
   init(props) {
     props = Object.assign({
       context: document.body,
+      slideContentSelector: '.js-lightbox-slide-content',
       slideSelector: '.js-lightbox',
       bgColor: '#fff',
       opacity: '0.94',

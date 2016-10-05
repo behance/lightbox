@@ -8,42 +8,38 @@
   </head>
   <body>
     <div class="project">
-      <div class="project-slide" data-picture='{
-        "img": { "src": "http://placehold.it/250x150" },
-        "sources": [{
-          "srcset": "http://placehold.it/550x450",
-          "media_query": "(min-width: 1px)"
-        }]
-      }'>
-        <img alt="first" width="350" height="150"
-          src="http://placehold.it/350x150" />
+      <div class="project-slide">
+        <script type="text/html" class="js-lightbox-slide-content">
+          <picture>
+            <source srcset="http://placehold.it/700x300" media="(min-width: 1px)">
+            <img src="http://placehold.it/250x150">
+          </picture>
+        </script>
+        <img alt="first" width="350" height="150" src="http://placehold.it/350x150">
       </div>
 
-      <div class="project-slide" data-picture='{
-        "img": { "src": "http://placehold.it/250x160" },
-        "sources": [{
-          "srcset": "http://placehold.it/550x460",
-          "media_query": "(min-width: 1px)"
-        }]
-      }'>
-        <img alt="second" width="350" height="160"
-          src="http://placehold.it/350x160" />
+      <img class="project-slide" alt="second"
+        width="350" height="160"
+        src="http://placehold.it/350x160"
+        data-src="http://placehold.it/700x320" />
+
+      <div class="project-slide">
+        <script type="text/html" class="js-lightbox-slide-content">
+          <picture>
+            <source srcset="http://placehold.it/700x340" media="(min-width: 1px)">
+            <img src="http://placehold.it/260x170">
+          </picture>
+        </script>
+        <img alt="third" width="350" height="170" src="http://placehold.it/350x170" />
       </div>
 
-      <div class="project-slide" data-picture='{
-        "img": { "src": "http://placehold.it/250x170" },
-        "sources": [{
-          "srcset": "http://placehold.it/550x470",
-          "media_query": "(min-width: 1px)"
-        }]
-      }'>
-        <img alt="third" width="350" height="170"
-          src="http://placehold.it/350x170" />
+      <div class="project-slide">
+        <script type="text/html" class="js-lightbox-slide-content">
+          <iframe width="560" height="315"
+            src="https://www.youtube.com/embed/oHg5SJYRHA0"
+            frameborder="0" allowfullscreen></iframe>
+        </script>
       </div>
-
-      <script type="text/template" class="project-slide" data-contains-slide-content="true">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/oHg5SJYRHA0" frameborder="0" allowfullscreen></iframe>
-      </script>
     </div>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="/bundle.js"></script>

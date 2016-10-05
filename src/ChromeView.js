@@ -1,3 +1,4 @@
+import 'style!../sass/lightbox.scss';
 import $ from 'jquery';
 import idleTimer from 'idle-timer';
 import tinycolor from 'tinycolor2';
@@ -7,6 +8,8 @@ const ESCAPE_KEYCODE = 27;
 const LEFT_ARROW_KEYCODE = 37;
 const RIGHT_ARROW_KEYCODE = 39;
 const EXTRAS_HIDDEN_CLASS = 'extras-hidden';
+const CONTENT_CLASS = 'lightbox-content';
+const ENABLED_CLASS = 'lightbox-enabled';
 const HIDDEN_CLASS = 'hidden';
 
 export default class ChromeView {
@@ -54,6 +57,8 @@ export default class ChromeView {
         }
       });
 
+    $('html').addClass(ENABLED_CLASS);
+
     this._$view
       .find('.js-blocking')
       .css({
@@ -73,7 +78,15 @@ export default class ChromeView {
 
   renderSlide(slide) {
     this._maybeHidePrevNext(slide);
-    this._$contents.html(this._getSlideContent(slide));
+
+    const $next = $(`<div class="${CONTENT_CLASS} ${HIDDEN_CLASS}">`);
+    $next.html(this._getSlideContent(slide));
+
+    this._$contents.find(`.${HIDDEN_CLASS}`).remove();
+    this._$contents.append($next);
+
+    this._$contents.find(`.${CONTENT_CLASS}:lt(1)`).addClass(HIDDEN_CLASS);
+    setTimeout(() => $next.removeClass(HIDDEN_CLASS), 0);
   }
 
   destroy() {
@@ -82,6 +95,8 @@ export default class ChromeView {
     $(document)
       .add(this._$context)
       .off('.lightbox');
+
+    $('html').removeClass(ENABLED_CLASS);
 
     if (this._idleTimer) {
       this._idleTimer.destroy();
@@ -106,24 +121,8 @@ export default class ChromeView {
   }
 
   _getSlideContent(slide) {
-    const picture = slide.$node.data('picture');
-    const src = slide.$node.data('src');
-    let $content;
-    if (picture) {
-      $content = $('<picture />');
-      picture.sources.forEach(({ srcset, media_query: media }) => {
-        $('<source />', { srcset, media }).appendTo($content);
-      });
-      const { src, alt } = picture.img;
-      $('<img />', { src, alt }).appendTo($content);
-    }
-    else if (slide.$node.data('containsSlideContent')) {
-      $content = slide.$node.html();
-    }
-    else {
-      $content = $('<img />', { src: src });
-    }
-    return $content;
+    const { src } = slide;
+    return src ? $('<img />', { src }) : slide.content;
   }
 
   _maybeHidePrevNext(activeSlide) {

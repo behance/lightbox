@@ -37,7 +37,9 @@ export const lightbox = `
         ${prevControl}
         ${nextControl}
         ${closeControl}
-        <div class="lightbox-contents js-contents"></div>
+        <div class="lightbox-contents js-contents">
+          <div class="lightbox-content"></div>
+        </div>
       </div>
     </div>
   </div>
