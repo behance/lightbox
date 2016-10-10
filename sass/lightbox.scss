@@ -1,4 +1,5 @@
 $button-padding: 40px;
+$tablet-and-mobile-breakpoint: 1024px;
 
 @mixin calc($property, $params, $important: false) {
   $important: if($important, ' !important', '');
@@ -199,3 +200,25 @@ html.lightbox-enabled {
   } // .close
 
 } // #lightbox-inner-wrap
+
+@media (max-width: $tablet-and-mobile-breakpoint) {
+
+  #lightbox-inner-wrap {
+    .close {
+
+      right: 0;
+      top: 0;
+
+      circle {
+        display: none;
+      }
+
+    } // .close
+
+    .next:hover,
+    .prev:hover {
+      opacity: 0;
+    }
+  }
+
+} // $tablet-and-mobile-breakpoint
