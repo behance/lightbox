@@ -6,6 +6,15 @@ $button-padding: 40px;
   #{$property}: calc(#{$params}) #{$important};
 }
 
+html.lightbox-enabled {
+
+  &,
+  body {
+    overflow: hidden;
+  }
+
+} // html.lightbox-enabled
+
 .lightbox-link {
   cursor: pointer;
 }
@@ -16,6 +25,26 @@ $button-padding: 40px;
   -ms-user-select: none;
   user-select: none;
 }
+
+.lightbox-content {
+
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  opacity: 1;
+  position: fixed;
+  top: 0;
+  transition: .2s;
+  width: 100vw;
+
+  &.hidden {
+    opacity: 0;
+  }
+
+} // .lightbox-content
+
 
 #lightbox-blocking {
   bottom: 0;
@@ -32,7 +61,6 @@ $button-padding: 40px;
   height: 100%;
   left: 0;
   position: fixed;
-  text-align: center;
   top: 0;
   width: 100%;
   z-index: 1001;

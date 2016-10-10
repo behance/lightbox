@@ -70,8 +70,8 @@ describe('ChromeView', function() {
     expectNextToBeShown();
   });
 
-  it('should render the html contents of a slide that has a data-contains-slide-contents="true" attr', function() {
-    this.set({}, [{ id: 0, $node: $('<div data-contains-slide-content="true"><button /></div>') }]);
+  it('should render the html contents of a slide', function() {
+    this.set({}, [{ id: 0, content: $('<div><button /></div>') }]);
     this.listeners.open(this.controller.slides[0]);
     expect($(CHROME_WRAP_CLASS)).toContainElement('button');
   });

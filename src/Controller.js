@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+const SLIDE_ID_ATTR = 'lightbox-slide-id';
+
 export default class Controller {
   constructor($context, props) {
     this._props = props;
@@ -53,15 +55,21 @@ export default class Controller {
   destroy() {
     this.close();
     this._$eventNode.off();
-    this._$links.removeClass('lightbox-link').off('click');
+    this._$links
+      .removeClass('lightbox-link')
+      .removeData(SLIDE_ID_ATTR)
+      .off('click');
   }
 
   _bind() {
     const self = this;
-    this._$links.addClass('lightbox-link').click(function(e) {
-      e.stopPropagation();
-      self.open(self.slides.filter(slide => slide.$node.is(this))[0].id);
-    });
+    this._$links.addClass('lightbox-link')
+      .each((id, el) => $(el).data(SLIDE_ID_ATTR, id))
+      .click(function(e) {
+        e.stopPropagation();
+        self.open(self.slides.filter(
+          slide => slide.id === $(this).data(SLIDE_ID_ATTR))[0].id);
+      });
   }
 
   _trigger(eventName, params) {
@@ -71,9 +79,13 @@ export default class Controller {
   _createSlides($links) {
     return $links
       .toArray()
-      .map((node, i) => ({
-        id: i,
-        $node: $(node)
-      }));
+      .map((node, i) => {
+        const $node = $(node);
+        return {
+          id: i,
+          src: $node.data('src'),
+          content: $node.find(this._props.slideContentSelector).html()
+        };
+      });
   }
 }
