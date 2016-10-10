@@ -203,20 +203,22 @@ html.lightbox-enabled {
 
 @media (max-width: $tablet-and-mobile-breakpoint) {
 
-  #lightbox-inner-wrap .close {
+  #lightbox-inner-wrap {
+    .close {
 
-    right: 0 !important; // override inline styles
-    top: 0 !important; // override inline styles
+      right: 0;
+      top: 0;
 
-    circle {
-      display: none;
+      circle {
+        display: none;
+      }
+
+    } // .close
+
+    .next:hover,
+    .prev:hover {
+      opacity: 0;
     }
-
-  } // .close
-
-  .next,
-  .prev {
-    opacity: 0 !important; // override inline styles
   }
 
 } // $tablet-and-mobile-breakpoint
