@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run eslint && npm run karma -- --single-run",
     "eslint": "eslint src/**/*.js test/**/*.js",
-    "karma": "karma start test/karma.conf.js",
+    "karma": "env NODE_ENV=test karma start test/karma.conf.js",
     "examples-simple": "webpack-dev-server --content-base examples/simple --config ./test/webpack.config.js --entry ./examples/simple"
   },
   "repository": {
@@ -20,15 +20,17 @@
   },
   "homepage": "https://github.com/behance/lightbox#readme",
   "dependencies": {
+    "hoverintent": "^1.0.3",
     "idle-timer": "git+https://github.com/nemtsov/idle-timer#8fc0007",
     "jquery": "~2.1.1",
     "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
+    "@claviska/jquery-offscreen": "^1.0.1",
     "babel": "^6.5.2",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
-    "babel-preset-behance": "^3.0.0",
+    "babel-preset-behance": "^3.1.0",
     "css-loader": "^0.25.0",
     "es6-shim": "^0.35.1",
     "eslint": "^3.7.0",

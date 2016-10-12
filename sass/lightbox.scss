@@ -40,10 +40,6 @@ html.lightbox-enabled {
   transition: .2s;
   width: 100vw;
 
-  &.hidden {
-    opacity: 0;
-  }
-
 } // .lightbox-content
 
 
@@ -64,6 +60,20 @@ html.lightbox-enabled {
   top: 0;
   width: 100vw;
   z-index: 1001;
+
+  .offscreen,
+  &.offscreen {
+    height: 1px;
+    overflow: hidden;
+    -webkit-transform: translate(-99999px);
+    -ms-transform: translate(-99999px);
+    transform: translate(-99999px);
+    width: 1px;
+  }
+
+  .hidden {
+    opacity: 0;
+  }
 
   .lightbox-contents {
     @extend %user-select-none;

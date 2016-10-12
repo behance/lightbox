@@ -1,7 +1,7 @@
 var bourbonIncludePaths = require('node-bourbon').includePaths;
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'inline-source-map',
   externals: {
     'jquery': 'jQuery'
   },

@@ -12,6 +12,7 @@ module.exports = function(config) {
       'test/fixtures/css/disable_animations.css',
       require.resolve('es6-shim'),
       'node_modules/jquery/dist/jquery.js',
+      'node_modules/@claviska/jquery-offscreen/jquery.offscreen.js',
       'node_modules/jasmine-jquery/lib/jasmine-jquery.js',
       'node_modules/jasmine-fixture/dist/jasmine-fixture.js',
       {
@@ -24,7 +25,7 @@ module.exports = function(config) {
       'test/specs/**/*.js'
     ],
     preprocessors: {
-      'test/specs/**/*.js': ['webpack']
+      'test/specs/**/*.js': ['webpack', 'sourcemap']
     },
     webpack: webpackConfig,
     reporters: ['progress', 'coverage'],
