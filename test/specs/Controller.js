@@ -39,8 +39,11 @@ describe('Controller', function() {
   });
 
   describe('next', function() {
-    it('should trigger a "next" event', function(done) {
-      this.unit.on('next', done);
+    it('should trigger a "activate" event', function(done) {
+      this.unit.on('activate', (slide) => {
+        expect(slide.id).toBe(1);
+        done();
+      });
       this.unit.open(0);
       this.unit.next();
     });
@@ -48,7 +51,10 @@ describe('Controller', function() {
 
   describe('prev', function() {
     it('should trigger a "prev" event', function(done) {
-      this.unit.on('prev', done);
+      this.unit.on('activate', (slide) => {
+        expect(slide.id).toBe(0);
+        done();
+      });
       this.unit.open(1);
       this.unit.prev();
     });

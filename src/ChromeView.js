@@ -11,13 +11,17 @@ const EXTRAS_HIDDEN_CLASS = 'extras-hidden';
 const CONTENT_CLASS = 'lightbox-content';
 const ENABLED_CLASS = 'lightbox-enabled';
 const HIDDEN_CLASS = 'hidden';
+const OFFSCREEN_CLASS = 'offscreen';
+const TRANSITION_END = 'webkitTransitionEnd ontransitionend msTransitionEnd transitionend';
+const JS_SLIDE_CLASS = 'js-slide';
+const JS_SLIDE_CONTENT_CLASS = 'js-slide-content';
 
 export default class ChromeView {
   constructor($context, controller, props) {
     this._$context = $context;
     this._controller = controller;
     this._props = props;
-    this._$view = $(lightboxTemplate);
+    this._$view = $(lightboxTemplate).appendTo($context);
     this._$contents = this._$view.find('.js-contents');
     this._$prev = this._$view.find('.js-prev');
     this._$next = this._$view.find('.js-next');
@@ -73,24 +77,34 @@ export default class ChromeView {
 
     this.showExtras();
 
-    this._$context.append(this._$view);
+    this._$view.removeClass(OFFSCREEN_CLASS);
   }
 
   renderSlide(slide) {
-    this._maybeHidePrevNext(slide);
+    this._maybeHidePrevNext();
+    this._appendSlide(slide);
 
-    const $next = $(`<div class="${CONTENT_CLASS} ${HIDDEN_CLASS}">`);
-    $next.html(this._getSlideContent(slide));
+    const $current = this._$contents.find(`.${JS_SLIDE_CLASS}[data-slide-is-active]`);
+    const $new = this._$contents.find(`.${JS_SLIDE_CLASS}[data-slide-id="${slide.id}"]`);
 
-    this._$contents.find(`.${HIDDEN_CLASS}`).remove();
-    this._$contents.append($next);
+    $current
+      .removeAttr('data-slide-is-active')
+      .find(`> .${JS_SLIDE_CONTENT_CLASS}`)
+      .addClass(HIDDEN_CLASS)
+      .one(TRANSITION_END, () => $current.remove());
 
-    this._$contents.find(`.${CONTENT_CLASS}:lt(1)`).addClass(HIDDEN_CLASS);
-    setTimeout(() => $next.removeClass(HIDDEN_CLASS), 0);
+    $new
+      .attr({ 'data-slide-is-active': true })
+      .removeClass(OFFSCREEN_CLASS)
+      .find(`> .${JS_SLIDE_CONTENT_CLASS}`)
+      .removeClass(HIDDEN_CLASS);
+
+    this._appendAdjacentSlides($current, $new);
   }
 
-  destroy() {
-    this._$view.remove();
+  close() {
+    this._$view.addClass(OFFSCREEN_CLASS);
+    this._$contents.empty();
 
     $(document)
       .add(this._$context)
@@ -103,6 +117,10 @@ export default class ChromeView {
     }
   }
 
+  destroy() {
+    this._$view.remove();
+  }
+
   hideExtras() {
     this._$view.addClass(EXTRAS_HIDDEN_CLASS);
   }
@@ -111,12 +129,37 @@ export default class ChromeView {
     this._$view.removeClass(EXTRAS_HIDDEN_CLASS);
   }
 
+  _appendSlide(slide) {
+    if (!slide || this._$contents.find(`[data-slide-id="${slide.id}"]`).length) { return; }
+
+    const $content = $('<div>')
+      .addClass(`${JS_SLIDE_CONTENT_CLASS} ${CONTENT_CLASS} ${HIDDEN_CLASS}`)
+      .html(this._getSlideContent(slide));
+
+    $('<div>', { 'data-slide-id': slide.id, class: `${JS_SLIDE_CLASS} ${OFFSCREEN_CLASS}` })
+      .append($content)
+      .appendTo(this._$contents);
+  }
+
+  _appendAdjacentSlides($current, $new) {
+    if ($current.length === 0) {
+      this._appendSlide(this._controller.getPrevSlide());
+      this._appendSlide(this._controller.getNextSlide());
+    }
+    else {
+      this._appendSlide($current.data('slide-id') < $new.data('slide-id')
+        ? this._controller.getNextSlide()
+        : this._controller.getPrevSlide());
+    }
+  }
+
   _bindToController() {
     this._controller.on({
       open: slide => { this.init(); this.renderSlide(slide); },
-      close: () => this.destroy(),
-      prev: slide => this.renderSlide(slide),
-      next: slide => this.renderSlide(slide)
+      close: () => this.close(),
+      destroy: () => this.destroy(),
+      activate: slide => this.renderSlide(slide),
+      prefetch: slide => this._appendSlide(slide)
     });
   }
 
@@ -125,9 +168,9 @@ export default class ChromeView {
     return src ? $('<img />', { src }) : slide.content;
   }
 
-  _maybeHidePrevNext(activeSlide) {
-    const hasPrev = this._controller.slides[activeSlide.id - 1];
-    const hasNext = this._controller.slides[activeSlide.id + 1];
+  _maybeHidePrevNext() {
+    const hasPrev = this._controller.getPrevSlide();
+    const hasNext = this._controller.getNextSlide();
     if (this._props.isCircular && (hasPrev || hasNext)) { return; }
     (hasPrev) ? this._$prev.removeClass(HIDDEN_CLASS) : this._$prev.addClass(HIDDEN_CLASS);
     (hasNext) ? this._$next.removeClass(HIDDEN_CLASS) : this._$next.addClass(HIDDEN_CLASS);

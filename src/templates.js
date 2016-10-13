@@ -30,16 +30,14 @@ const closeControl = `
 `;
 
 export const lightbox = `
-  <div class="js-lightbox-wrap" id="lightbox-wrap">
+  <div class="js-lightbox-wrap offscreen" id="lightbox-wrap">
     ${backdrop}
     <div class="js-lightbox-inner-wrap" id="lightbox-inner-wrap">
       <div class="js-img-wrap" id="lightbox-img-wrap">
         ${prevControl}
         ${nextControl}
         ${closeControl}
-        <div class="lightbox-contents js-contents">
-          <div class="lightbox-content"></div>
-        </div>
+        <div class="lightbox-contents js-contents"></div>
       </div>
     </div>
   </div>
