@@ -31,9 +31,10 @@ export default class Controller {
 
   open(slideId) {
     const slide = this.slides[slideId];
+    if (!slide) { return; }
     this.activeSlide = slide;
     this._isOpen = true;
-    this._trigger('open', [slide]);
+    this._trigger('open', slide);
   }
 
   close() {
@@ -42,33 +43,25 @@ export default class Controller {
   }
 
   next() {
-    const nextSlide = this.slides[this.getNextId()];
-    if (!nextSlide) { return; }
-    this.activeSlide = nextSlide;
-    this._trigger('next', nextSlide);
+    this.activateSlide(this.getNextSlide());
   }
 
   prev() {
-    const prevSlide = this.slides[this.getPrevId()];
-    if (!prevSlide) { return; }
-    this.activeSlide = prevSlide;
-    this._trigger('prev', prevSlide);
+    this.activateSlide(this.getPrevSlide());
   }
 
-  getNextId() {
-    const nextId = this.activeSlide.id + 1;
-    const next = this.slides[nextId];
-    if (!this._props.isCircular && !next) { return; }
-    const firstId = 0;
-    return next ? nextId : firstId;
+  getNextSlide() {
+    return this._getSlideByDirection(1);
   }
 
-  getPrevId() {
-    const prevId = this.activeSlide.id - 1;
-    const prev = this.slides[prevId];
-    if (!this._props.isCircular && !prev) { return; }
-    const lastId = this.slides.length - 1;
-    return prev ? prevId : lastId;
+  getPrevSlide() {
+    return this._getSlideByDirection(-1);
+  }
+
+  activateSlide(slide) {
+    if (!slide) { return; }
+    this.activeSlide = slide;
+    this._trigger('activate', slide);
   }
 
   destroy() {
@@ -117,10 +110,23 @@ export default class Controller {
       });
   }
 
+  _getSlideByDirection(direction) {
+    const id = this.activeSlide.id + direction;
+    const slide = this.slides[id];
+    if (slide) { return slide; }
+    if (this._props.isCircular) {
+      return (direction === -1) ? (this.slides.length - 1) : 0;
+    }
+  }
+
   _addPrefetchOnHover(el, id) {
-    this._hoverlisteners.push(hoverintent(el,
-      () => this._trigger('prefetch', this.slides[id]),
-      () => {}));
+    this._hoverlisteners.push(
+      hoverintent(
+        el,
+        () => this._trigger('prefetch', this.slides[id]),
+        () => {}
+      )
+    );
   }
 
   _removePrefetchOnHover() {

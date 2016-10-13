@@ -13,6 +13,8 @@ const ENABLED_CLASS = 'lightbox-enabled';
 const HIDDEN_CLASS = 'hidden';
 const OFFSCREEN_CLASS = 'offscreen';
 const TRANSITION_END = 'webkitTransitionEnd ontransitionend msTransitionEnd transitionend';
+const JS_SLIDE_CLASS = 'js-slide';
+const JS_SLIDE_CONTENT_CLASS = 'js-slide-content';
 
 export default class ChromeView {
   constructor($context, controller, props) {
@@ -82,22 +84,22 @@ export default class ChromeView {
     this._maybeHidePrevNext();
     this._appendSlide(slide);
 
-    const $current = this._$contents.find('[data-slide-is-active]');
-    const $next = this._$contents.find(`[data-slide-id="${slide.id}"]`);
+    const $current = this._$contents.find(`.${JS_SLIDE_CLASS}[data-slide-is-active]`);
+    const $new = this._$contents.find(`.${JS_SLIDE_CLASS}[data-slide-id="${slide.id}"]`);
 
     $current
       .removeAttr('data-slide-is-active')
-      .find('> div')
+      .find(`> .${JS_SLIDE_CONTENT_CLASS}`)
       .addClass(HIDDEN_CLASS)
       .one(TRANSITION_END, () => $current.remove());
 
-    $next
+    $new
       .attr({ 'data-slide-is-active': true })
       .removeClass(OFFSCREEN_CLASS)
-      .find('> div')
+      .find(`> .${JS_SLIDE_CONTENT_CLASS}`)
       .removeClass(HIDDEN_CLASS);
 
-    this._appendNext($current, $next);
+    this._appendAdjacentSlides($current, $new);
   }
 
   close() {
@@ -131,23 +133,23 @@ export default class ChromeView {
     if (!slide || this._$contents.find(`[data-slide-id="${slide.id}"]`).length) { return; }
 
     const $content = $('<div>')
-      .addClass(`${CONTENT_CLASS} ${HIDDEN_CLASS}`)
+      .addClass(`${JS_SLIDE_CONTENT_CLASS} ${CONTENT_CLASS} ${HIDDEN_CLASS}`)
       .html(this._getSlideContent(slide));
 
-    $('<div>', { 'data-slide-id': slide.id, class: `${OFFSCREEN_CLASS}` })
+    $('<div>', { 'data-slide-id': slide.id, class: `${JS_SLIDE_CLASS} ${OFFSCREEN_CLASS}` })
       .append($content)
       .appendTo(this._$contents);
   }
 
-  _appendNext($current, $next) {
+  _appendAdjacentSlides($current, $new) {
     if ($current.length === 0) {
-      this._appendSlide(this._getPrevSlide());
-      this._appendSlide(this._getNextSlide());
+      this._appendSlide(this._controller.getPrevSlide());
+      this._appendSlide(this._controller.getNextSlide());
     }
     else {
-      this._appendSlide($current.data('slide-id') < $next.data('slide-id')
-        ? this._getNextSlide()
-        : this._getPrevSlide());
+      this._appendSlide($current.data('slide-id') < $new.data('slide-id')
+        ? this._controller.getNextSlide()
+        : this._controller.getPrevSlide());
     }
   }
 
@@ -156,8 +158,7 @@ export default class ChromeView {
       open: slide => { this.init(); this.renderSlide(slide); },
       close: () => this.close(),
       destroy: () => this.destroy(),
-      prev: slide => this.renderSlide(slide),
-      next: slide => this.renderSlide(slide),
+      activate: slide => this.renderSlide(slide),
       prefetch: slide => this._appendSlide(slide)
     });
   }
@@ -168,18 +169,10 @@ export default class ChromeView {
   }
 
   _maybeHidePrevNext() {
-    const hasPrev = this._getPrevSlide();
-    const hasNext = this._getNextSlide();
+    const hasPrev = this._controller.getPrevSlide();
+    const hasNext = this._controller.getNextSlide();
     if (this._props.isCircular && (hasPrev || hasNext)) { return; }
     (hasPrev) ? this._$prev.removeClass(HIDDEN_CLASS) : this._$prev.addClass(HIDDEN_CLASS);
     (hasNext) ? this._$next.removeClass(HIDDEN_CLASS) : this._$next.addClass(HIDDEN_CLASS);
-  }
-
-  _getPrevSlide() {
-    return this._controller.slides[this._controller.getPrevId()];
-  }
-
-  _getNextSlide() {
-    return this._controller.slides[this._controller.getNextId()];
   }
 }

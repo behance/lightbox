@@ -22,7 +22,7 @@ describe('ChromeView', function() {
     const fixture = setFixtures(FIXTURE);
     this.$context = fixture.find('#container');
     this.controller = jasmine.createSpyObj('controller', [
-      'on', 'off', 'next', 'prev', 'getPrevId', 'getNextId'
+      'on', 'off', 'next', 'prev', 'getPrevSlide', 'getNextSlide'
     ]);
     this.props = {};
     this.set = (props, slides) => {
@@ -65,8 +65,8 @@ describe('ChromeView', function() {
   });
 
   it('should show prev & next when the active is the 2nd of 3', function() {
-    this.controller.getPrevId.and.returnValue(0);
-    this.controller.getNextId.and.returnValue(2);
+    this.controller.getPrevSlide.and.returnValue(this.controller.slides[0]);
+    this.controller.getNextSlide.and.returnValue(this.controller.slides[2]);
     this.listeners.open(this.controller.slides[1]);
     expectPrevToBeShown();
     expectNextToBeShown();
@@ -86,7 +86,7 @@ describe('ChromeView', function() {
     });
 
     it('should not hide prev when circular and is the first slide', function() {
-      this.controller.getPrevId.and.returnValue(2);
+      this.controller.getPrevSlide.and.returnValue(this.controller.slides[2]);
       this.set({ isCircular: true });
       this.listeners.open(this.controller.slides[0]);
       expectPrevToBeShown();
@@ -101,7 +101,7 @@ describe('ChromeView', function() {
     });
 
     it('should not hide prev when circular and is the last slide', function() {
-      this.controller.getNextId.and.returnValue(0);
+      this.controller.getNextSlide.and.returnValue(this.controller.slides[0]);
       this.set({ isCircular: true });
       this.listeners.open(this.controller.slides[2]);
       expectNextToBeShown();
