@@ -72,7 +72,9 @@ export default class Controller {
   }
 
   destroy() {
-    this._isOpen && this.close();
+    if (this._isOpen) {
+      this.close();
+    }
     this._removePrefetchOnHover();
     this._$links
       .removeClass(LINK_CLASS)

@@ -128,7 +128,7 @@ export default class ChromeView {
   }
 
   _appendSlide(slide) {
-    if (!slide || this._$contents.find(`[data-slide-id="${slide.id}"]`).size()) { return; }
+    if (!slide || this._$contents.find(`[data-slide-id="${slide.id}"]`).length) { return; }
 
     const $content = $('<div>')
       .addClass(`${CONTENT_CLASS} ${HIDDEN_CLASS}`)
@@ -140,7 +140,7 @@ export default class ChromeView {
   }
 
   _appendNext($current, $next) {
-    if ($current.size() === 0) {
+    if ($current.length === 0) {
       this._appendSlide(this._getPrevSlide());
       this._appendSlide(this._getNextSlide());
     }
