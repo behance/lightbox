@@ -72,7 +72,7 @@ export default class Controller {
     this._$links
       .removeClass(LINK_CLASS)
       .removeData(SLIDE_ID_ATTR)
-      .off('mousedown click');
+      .off('.lightbox');
     this._trigger('destroy');
     this._$eventNode.off();
   }
@@ -84,10 +84,10 @@ export default class Controller {
         this._addPrefetchOnHover(el, id);
         $(el).data(SLIDE_ID_ATTR, id);
       })
-      .on('mousedown', function() {
+      .on('mousedown.lightbox', function() {
         self._trigger('prefetch', self.slides[$(this).data(SLIDE_ID_ATTR)]);
       })
-      .on('click', function(e) {
+      .on('click.lightbox', function(e) {
         e.stopPropagation();
         self.open($(this).data(SLIDE_ID_ATTR));
       });
