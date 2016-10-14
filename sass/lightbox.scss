@@ -33,10 +33,7 @@ html.lightbox-enabled {
   display: flex;
   height: 100vh;
   justify-content: center;
-  left: 0;
   opacity: 1;
-  position: fixed;
-  top: 0;
   transition: .2s;
   width: 100vw;
 
@@ -82,7 +79,6 @@ html.lightbox-enabled {
     display: inline-block;
     max-height: 100%;
     max-width: 100%;
-    position: relative;
   }
 
   &.single {
