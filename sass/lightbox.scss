@@ -47,7 +47,26 @@ html.lightbox-zoomed {
 .lightbox-link,
 .lightbox-content.zoomable {
   cursor: zoom-in;
-}
+  position: relative;
+
+  &:hover {
+
+    &::after {
+      background: rgba(#696969, .2) url('../icons/expand.svg') no-repeat center;
+      background-size: 16px;
+      border-radius: 50%;
+      content: '';
+      display: block;
+      height: 36px;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 36px;
+    }
+
+  } // &:hover
+
+} // .lightbox-link
 
 %user-select-none {
   -moz-user-select: none;
@@ -62,7 +81,6 @@ html.lightbox-zoomed {
   display: flex;
   height: 100vh;
   justify-content: center;
-  left: 0;
   opacity: 1;
   position: absolute;
   top: 0;
