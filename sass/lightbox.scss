@@ -47,6 +47,10 @@ html.lightbox-zoomed {
 .lightbox-link,
 .lightbox-content.zoomable {
   cursor: zoom-in;
+}
+
+.lightbox-link {
+
   position: relative;
 
   &:hover {
@@ -62,6 +66,7 @@ html.lightbox-zoomed {
       right: 10px;
       top: 10px;
       width: 36px;
+      z-index: 1000;
     }
 
   } // &:hover

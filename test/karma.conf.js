@@ -22,6 +22,13 @@ module.exports = function(config) {
         served: true,
         nocache: false
       },
+      {
+        pattern: 'icons/*',
+        watched: false,
+        included: false,
+        served: true,
+        nocache: false
+      },
       'test/specs/**/*.js'
     ],
     preprocessors: {
