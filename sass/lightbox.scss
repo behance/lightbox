@@ -63,12 +63,13 @@ html.lightbox-enabled {
 
   .offscreen,
   &.offscreen {
-    height: 1px;
+    height: 0;
     overflow: hidden;
-    -webkit-transform: translate(-99999px);
-    -ms-transform: translate(-99999px);
-    transform: translate(-99999px);
-    width: 1px;
+    -webkit-transform: translateX(-99999px);
+    -ms-transform: translateX(-99999px);
+    transform: translateX(-99999px);
+    width: 0;
+    visibility: hidden;
   }
 
   .hidden {
@@ -78,7 +79,6 @@ html.lightbox-enabled {
   .lightbox-contents {
     @extend %user-select-none;
 
-    cursor: zoom-out;
     display: inline-block;
     max-height: 100%;
     max-width: 100%;
@@ -231,3 +231,13 @@ html.lightbox-enabled {
   }
 
 } // $tablet-and-mobile-breakpoint
+
+// IE11, as it does not support the zoom cursor
+@media all and (-ms-high-contrast:none) {
+
+  .lightbox-link,
+  .lightbox-content.zoomable {
+    cursor: pointer;
+  }
+
+} // IE11
