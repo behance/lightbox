@@ -118,7 +118,9 @@ export default class ChromeView {
     this._$view.addClass(LOADING_CLASS);
     onImgLoad($newImage, () => {
       this._$view.removeClass(LOADING_CLASS);
-      $newContent.addClass(getZoomableClasses($newImage[0], $(window)));
+      if (!slide.data.noZoom) {
+        $newContent.addClass(getZoomableClasses($newImage[0], $(window)));
+      }
       revealNewContent();
     });
   }
@@ -186,7 +188,7 @@ export default class ChromeView {
   }
 
   _getSlideContent(slide) {
-    const { src } = slide;
+    const { src } = slide.data;
     return src ? $('<img />', { src }) : slide.content;
   }
 
