@@ -16,7 +16,36 @@ html.lightbox-enabled {
 
 } // html.lightbox-enabled
 
-.lightbox-link {
+html.lightbox-zoomed {
+
+  .lightbox-content {
+
+    cursor: zoom-out;
+    overflow: auto;
+
+    &.zoomable-x {
+      justify-content: flex-start;
+    }
+
+    &.zoomable-y {
+      align-items: baseline;
+    }
+
+  } //.lightbox-content
+
+  #lightbox-wrap img {
+    max-width: inherit;
+    max-height: inherit;
+  }
+
+  #lightbox-img-wrap .lightbox-extra {
+    display: none;
+  }
+
+} // html.lightbox-zoomed
+
+.lightbox-link,
+.lightbox-content.zoomable {
   cursor: zoom-in;
 }
 
