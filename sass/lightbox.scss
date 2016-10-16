@@ -113,7 +113,7 @@ html.lightbox-enabled {
 
   } // &.single
 
-  &.extras-hidden #lightbox-img-wrap > :not(.lightbox-contents) {
+  &.extras-hidden #lightbox-img-wrap .lightbox-extra {
     opacity: 0;
     transition: 1s;
   }
