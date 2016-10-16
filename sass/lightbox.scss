@@ -44,12 +44,21 @@ html.lightbox-enabled {
 
 
 #lightbox-blocking {
+
+  align-items: center;
   bottom: 0;
+  display: flex;
+  justify-content: center;
   left: 0;
   position: fixed;
   right: 0;
   top: 0;
   z-index: 1002;
+
+  .lightbox-spinner {
+    display: none;
+  }
+
 } // #lightbox-blocking
 
 #lightbox-wrap {
@@ -70,6 +79,12 @@ html.lightbox-enabled {
     transform: translateX(-99999px);
     width: 0;
     visibility: hidden;
+  }
+
+  &.loading {
+    .lightbox-spinner {
+      display: block;
+    }
   }
 
   .hidden {
