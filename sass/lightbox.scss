@@ -104,6 +104,9 @@ html.lightbox-zoomed {
     height: 0;
     overflow: hidden;
     visibility: hidden;
+    -webkit-transform: translateX(-99999px);
+    -ms-transform: translateX(-99999px);
+    transform: translateX(-99999px);
     width: 0;
   }
 
