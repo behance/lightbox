@@ -29,9 +29,9 @@ describe('ChromeView', function() {
       Object.keys(props).forEach(key => this.props[key] = props[key]);
       this.$img = this.$context.find('img').first();
       this.controller.slides = (slides || [
-        { id: 0, $node: this.$img },
-        { id: 1, $node: this.$img },
-        { id: 2, $node: this.$img },
+        { id: 0, data: {}, content: this.$img },
+        { id: 1, data: {}, content: this.$img },
+        { id: 2, data: {}, content: this.$img },
       ]);
       this.view = new ChromeView(this.$context, this.controller, this.props);
       this.listeners = this.controller.on.calls.first().args[0];
@@ -46,7 +46,7 @@ describe('ChromeView', function() {
   describe('hide prev & next when only one slide is present', function() {
     beforeEach(function() {
       this.assert = () => {
-        this.controller.slides = [{ id: 0, $node: this.$img }];
+        this.controller.slides = [{ id: 0, data: {}, content: this.$img }];
         this.listeners.open(this.controller.slides[0]);
         expectPrevToBeHidden();
         expectNextToBeHidden();
@@ -73,7 +73,7 @@ describe('ChromeView', function() {
   });
 
   it('should render the html contents of a slide', function() {
-    this.set({}, [{ id: 0, content: $('<div><button /></div>') }]);
+    this.set({}, [{ id: 0, data: {}, content: $('<div><button /></div>') }]);
     this.listeners.open(this.controller.slides[0]);
     expect($(CHROME_WRAP_CLASS)).toContainElement('button');
   });

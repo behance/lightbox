@@ -16,7 +16,36 @@ html.lightbox-enabled {
 
 } // html.lightbox-enabled
 
-.lightbox-link {
+html.lightbox-zoomed {
+
+  .lightbox-content {
+
+    cursor: zoom-out;
+    overflow: auto;
+
+    &.zoomable-x {
+      justify-content: flex-start;
+    }
+
+    &.zoomable-y {
+      align-items: baseline;
+    }
+
+  } //.lightbox-content
+
+  #lightbox-wrap img {
+    max-width: inherit;
+    max-height: inherit;
+  }
+
+  #lightbox-img-wrap .lightbox-extra {
+    display: none;
+  }
+
+} // html.lightbox-zoomed
+
+.lightbox-link,
+.lightbox-content.zoomable {
   cursor: zoom-in;
 }
 
@@ -37,19 +66,28 @@ html.lightbox-enabled {
   opacity: 1;
   position: absolute;
   top: 0;
-  transition: .2s;
+  transition: .4s;
   width: 100vw;
 
 } // .lightbox-content
 
 
 #lightbox-blocking {
+
+  align-items: center;
   bottom: 0;
+  display: flex;
+  justify-content: center;
   left: 0;
   position: fixed;
   right: 0;
   top: 0;
   z-index: 1002;
+
+  .lightbox-spinner {
+    display: none;
+  }
+
 } // #lightbox-blocking
 
 #lightbox-wrap {
@@ -63,12 +101,19 @@ html.lightbox-enabled {
 
   .offscreen,
   &.offscreen {
-    height: 1px;
+    height: 0;
     overflow: hidden;
-    -webkit-transform: translate(-99999px);
-    -ms-transform: translate(-99999px);
-    transform: translate(-99999px);
-    width: 1px;
+    visibility: hidden;
+    -webkit-transform: translateX(-99999px);
+    -ms-transform: translateX(-99999px);
+    transform: translateX(-99999px);
+    width: 0;
+  }
+
+  &.loading {
+    .lightbox-spinner {
+      display: block;
+    }
   }
 
   .hidden {
@@ -78,7 +123,6 @@ html.lightbox-enabled {
   .lightbox-contents {
     @extend %user-select-none;
 
-    cursor: zoom-out;
     display: inline-block;
     max-height: 100%;
     max-width: 100%;
@@ -98,7 +142,7 @@ html.lightbox-enabled {
 
   } // &.single
 
-  &.extras-hidden #lightbox-img-wrap > :not(.lightbox-contents) {
+  &.extras-hidden #lightbox-img-wrap .lightbox-extra {
     opacity: 0;
     transition: 1s;
   }
@@ -231,3 +275,13 @@ html.lightbox-enabled {
   }
 
 } // $tablet-and-mobile-breakpoint
+
+// IE11, as it does not support the zoom cursor
+@media all and (-ms-high-contrast:none) {
+
+  .lightbox-link,
+  .lightbox-content.zoomable {
+    cursor: pointer;
+  }
+
+} // IE11

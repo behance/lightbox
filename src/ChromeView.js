@@ -3,6 +3,8 @@ import $ from 'jquery';
 import idleTimer from 'idle-timer';
 import tinycolor from 'tinycolor2';
 import { lightbox as lightboxTemplate } from './templates';
+import { onImgLoad } from './image/onImgLoad';
+import { ZOOMABLE_CLASS, getZoomableClasses } from './image/zoomable';
 
 const ESCAPE_KEYCODE = 27;
 const LEFT_ARROW_KEYCODE = 37;
@@ -10,11 +12,13 @@ const RIGHT_ARROW_KEYCODE = 39;
 const EXTRAS_HIDDEN_CLASS = 'extras-hidden';
 const CONTENT_CLASS = 'lightbox-content';
 const ENABLED_CLASS = 'lightbox-enabled';
+const ZOOMED_CLASS = 'lightbox-zoomed';
 const HIDDEN_CLASS = 'hidden';
 const OFFSCREEN_CLASS = 'offscreen';
 const TRANSITION_END = 'webkitTransitionEnd ontransitionend msTransitionEnd transitionend';
 const JS_SLIDE_CLASS = 'js-slide';
 const JS_SLIDE_CONTENT_CLASS = 'js-slide-content';
+const LOADING_CLASS = 'loading';
 
 export default class ChromeView {
   constructor($context, controller, props) {
@@ -29,6 +33,7 @@ export default class ChromeView {
   }
 
   init() {
+    const $html = $('html');
     const act = (name, event) => {
       event.stopImmediatePropagation();
       this._controller[name]();
@@ -43,7 +48,10 @@ export default class ChromeView {
     this._$context
       .on('click.lightbox', '.js-next', (e) => act('next', e))
       .on('click.lightbox', '.js-prev', (e) => act('prev', e))
-      .on('click.lightbox', (e) => act('close', e));
+      .on('click.lightbox', '.js-close', (e) => act('close', e))
+      .on('click.lightbox', `.${JS_SLIDE_CONTENT_CLASS}.${ZOOMABLE_CLASS}`, () => {
+        $html.toggleClass(ZOOMED_CLASS);
+      });
 
     $(document)
       .on('mouseout.lightbox', () => this._idleTimer.idle())
@@ -61,7 +69,7 @@ export default class ChromeView {
         }
       });
 
-    $('html').addClass(ENABLED_CLASS);
+    $html.addClass(ENABLED_CLASS);
 
     this._$view
       .find('.js-blocking')
@@ -80,7 +88,7 @@ export default class ChromeView {
     this._$view.removeClass(OFFSCREEN_CLASS);
   }
 
-  renderSlide(slide) {
+  renderSlide(slide, cb = (() => {})) {
     this._maybeHidePrevNext();
     this._appendSlide(slide);
 
@@ -89,17 +97,32 @@ export default class ChromeView {
 
     $current
       .removeAttr('data-slide-is-active')
-      .find(`> .${JS_SLIDE_CONTENT_CLASS}`)
+      .find(`.${JS_SLIDE_CONTENT_CLASS}`)
       .addClass(HIDDEN_CLASS)
       .one(TRANSITION_END, () => $current.remove());
 
     $new
       .attr({ 'data-slide-is-active': true })
-      .removeClass(OFFSCREEN_CLASS)
-      .find(`> .${JS_SLIDE_CONTENT_CLASS}`)
-      .removeClass(HIDDEN_CLASS);
+      .removeClass(OFFSCREEN_CLASS);
 
-    this._appendAdjacentSlides($current, $new);
+    const $newContent = $new.find(`.${JS_SLIDE_CONTENT_CLASS}`);
+    const $newImage = $newContent.find('img');
+    const revealNewContent = () => {
+      $newContent.removeClass(HIDDEN_CLASS);
+      this._appendAdjacentSlides($current, $new);
+      cb();
+    };
+
+    if (!$newImage.length) { return revealNewContent(); }
+
+    this._$view.addClass(LOADING_CLASS);
+    onImgLoad($newImage, () => {
+      this._$view.removeClass(LOADING_CLASS);
+      if (!slide.data.noZoom) {
+        $newContent.addClass(getZoomableClasses($newImage[0], $(window)));
+      }
+      revealNewContent();
+    });
   }
 
   close() {
@@ -141,6 +164,7 @@ export default class ChromeView {
       .appendTo(this._$contents);
   }
 
+
   _appendAdjacentSlides($current, $new) {
     if ($current.length === 0) {
       this._appendSlide(this._controller.getPrevSlide());
@@ -164,7 +188,7 @@ export default class ChromeView {
   }
 
   _getSlideContent(slide) {
-    const { src } = slide;
+    const { src } = slide.data;
     return src ? $('<img />', { src }) : slide.content;
   }
 

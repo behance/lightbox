@@ -104,7 +104,7 @@ export default class Controller {
         const $node = $(node);
         return {
           id: i,
-          src: $node.data('src'),
+          data: $node.data(),
           content: $node.find(this._props.slideContentSelector).html()
         };
       });
@@ -115,7 +115,7 @@ export default class Controller {
     const slide = this.slides[id];
     if (slide) { return slide; }
     if (this._props.isCircular) {
-      return (direction === -1) ? (this.slides.length - 1) : 0;
+      return this.slides[(direction === -1) ? (this.slides.length - 1) : 0];
     }
   }
 
