@@ -103,11 +103,8 @@ html.lightbox-zoomed {
   &.offscreen {
     height: 0;
     overflow: hidden;
-    -webkit-transform: translateX(-99999px);
-    -ms-transform: translateX(-99999px);
-    transform: translateX(-99999px);
-    width: 0;
     visibility: hidden;
+    width: 0;
   }
 
   &.loading {
