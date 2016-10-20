@@ -1,4 +1,4 @@
-$button-padding: 40px;
+$button-padding: 20px;
 $tablet-and-mobile-breakpoint: 1024px;
 
 @mixin calc($property, $params, $important: false) {
@@ -89,7 +89,7 @@ html.lightbox-zoomed {
   opacity: 1;
   position: absolute;
   top: 0;
-  transition: .4s;
+  transition: opacity .4s;
   width: 100vw;
 
 } // .lightbox-content
@@ -167,7 +167,7 @@ html.lightbox-zoomed {
 
   &.extras-hidden #lightbox-img-wrap .lightbox-extra {
     opacity: 0;
-    transition: 1s;
+    transition: opacity 1s;
   }
 
   img {
@@ -208,7 +208,7 @@ html.lightbox-zoomed {
     height: 100vh;
     opacity: 0;
     top: 0;
-    width: 33.3%;
+    width: 30vw;
 
     &:hover {
       opacity: 1;
@@ -226,7 +226,7 @@ html.lightbox-zoomed {
 
     svg {
 
-      @include calc('top', '50% - 15px');
+      @include calc('top', '50% - 30px');
       position: absolute;
 
       .lightbox-icon-arrow {
@@ -261,8 +261,8 @@ html.lightbox-zoomed {
 
     position: fixed;
     height: 40px;
-    right: 20px;
-    top: 20px;
+    right: $button-padding;
+    top: $button-padding;
     width: 40px;
 
     &:hover {

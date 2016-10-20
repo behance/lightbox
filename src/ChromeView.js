@@ -32,7 +32,7 @@ export default class ChromeView {
     this._bindToController();
   }
 
-  init() {
+  open() {
     const $html = $('html');
     const act = (name, event) => {
       event.stopImmediatePropagation();
@@ -99,7 +99,13 @@ export default class ChromeView {
       .removeAttr('data-slide-is-active')
       .find(`.${JS_SLIDE_CONTENT_CLASS}`)
       .addClass(HIDDEN_CLASS)
-      .one(TRANSITION_END, () => $current.remove());
+      .one(TRANSITION_END, () => {
+        const data = $current.data();
+        if (!data.slideIsActive) {
+          this._controller.deactivateSlide(this._controller.slides[data.slideId]);
+          $current.remove();
+        }
+      });
 
     $new
       .attr({ 'data-slide-is-active': true })
@@ -141,6 +147,7 @@ export default class ChromeView {
   }
 
   destroy() {
+    this.close();
     this._$view.remove();
   }
 
@@ -179,7 +186,7 @@ export default class ChromeView {
 
   _bindToController() {
     this._controller.on({
-      open: slide => { this.init(); this.renderSlide(slide); },
+      open: () => this.open(),
       close: () => this.close(),
       destroy: () => this.destroy(),
       activate: slide => this.renderSlide(slide),
