@@ -32,13 +32,14 @@ export default class Controller {
   open(slideId) {
     const slide = this.slides[slideId];
     if (!slide) { return; }
-    this.activeSlide = slide;
     this._isOpen = true;
     this._trigger('open', slide);
+    this.activateSlide(slide);
   }
 
   close() {
     this._isOpen = false;
+    this.deactivateSlide(this.activeSlide);
     this._trigger('close');
   }
 
@@ -62,6 +63,11 @@ export default class Controller {
     if (!slide) { return; }
     this.activeSlide = slide;
     this._trigger('activate', slide);
+  }
+
+  deactivateSlide(slide) {
+    if (!slide) { return; }
+    this._trigger('deactivate', slide);
   }
 
   destroy() {

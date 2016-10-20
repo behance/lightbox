@@ -41,6 +41,7 @@ describe('Controller', function() {
   describe('next', function() {
     it('should trigger a "activate" event', function(done) {
       this.unit.on('activate', (slide) => {
+        if (slide.id === 0) { return; }
         expect(slide.id).toBe(1);
         done();
       });
@@ -52,6 +53,7 @@ describe('Controller', function() {
   describe('prev', function() {
     it('should trigger a "prev" event', function(done) {
       this.unit.on('activate', (slide) => {
+        if (slide.id === 1) { return; }
         expect(slide.id).toBe(0);
         done();
       });

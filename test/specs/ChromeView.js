@@ -5,7 +5,7 @@ const imagePath = id => `/base/test/fixtures/images/img_${id}.png`;
 
 const FIXTURE = `
   <div id="container">
-    <img data-src="${imagePath(1)}" />
+    <img src="${imagePath(1)}" />
   </div>
 `;
 const CHROME_WRAP_CLASS = '.js-lightbox-wrap';
@@ -22,7 +22,7 @@ describe('ChromeView', function() {
     const fixture = setFixtures(FIXTURE);
     this.$context = fixture.find('#container');
     this.controller = jasmine.createSpyObj('controller', [
-      'on', 'off', 'next', 'prev', 'getPrevSlide', 'getNextSlide'
+      'on', 'off', 'next', 'prev', 'close', 'getPrevSlide', 'getNextSlide', 'deactivateSlide'
     ]);
     this.props = {};
     this.set = (props, slides) => {
@@ -47,7 +47,7 @@ describe('ChromeView', function() {
     beforeEach(function() {
       this.assert = () => {
         this.controller.slides = [{ id: 0, data: {}, content: this.$img }];
-        this.listeners.open(this.controller.slides[0]);
+        this.listeners.activate(this.controller.slides[0]);
         expectPrevToBeHidden();
         expectNextToBeHidden();
       };
@@ -74,21 +74,21 @@ describe('ChromeView', function() {
 
   it('should render the html contents of a slide', function() {
     this.set({}, [{ id: 0, data: {}, content: $('<div><button /></div>') }]);
-    this.listeners.open(this.controller.slides[0]);
+    this.listeners.activate(this.controller.slides[0]);
     expect($(CHROME_WRAP_CLASS)).toContainElement('button');
   });
 
   describe('prev', function() {
     it('should hide prev when non-circular and is the first slide', function() {
       this.set({ isCircular: false });
-      this.listeners.open(this.controller.slides[0]);
+      this.listeners.activate(this.controller.slides[0]);
       expectPrevToBeHidden();
     });
 
     it('should not hide prev when circular and is the first slide', function() {
       this.controller.getPrevSlide.and.returnValue(this.controller.slides[2]);
       this.set({ isCircular: true });
-      this.listeners.open(this.controller.slides[0]);
+      this.listeners.activate(this.controller.slides[0]);
       expectPrevToBeShown();
     });
   });
@@ -96,15 +96,70 @@ describe('ChromeView', function() {
   describe('next', function() {
     it('should hide next when non-circular and is the last slide', function() {
       this.set({ isCircular: false });
-      this.listeners.open(this.controller.slides[2]);
+      this.listeners.activate(this.controller.slides[2]);
       expectNextToBeHidden();
     });
 
     it('should not hide prev when circular and is the last slide', function() {
       this.controller.getNextSlide.and.returnValue(this.controller.slides[0]);
       this.set({ isCircular: true });
-      this.listeners.open(this.controller.slides[2]);
+      this.listeners.activate(this.controller.slides[2]);
       expectNextToBeShown();
+    });
+  });
+
+  describe('controlled with a keyboard', function() {
+    beforeEach(function() {
+      this.triggerKey = keyCode => $(document).trigger({ type: 'keydown', keyCode });
+      this.listeners.open();
+    });
+
+    it('should call controller.prev() when the left arrow is pressed', function() {
+      this.triggerKey(37);
+      expect(this.controller.prev).toHaveBeenCalled();
+    });
+
+    it('should call controller.next() when the right arrow is pressed', function() {
+      this.triggerKey(39);
+      expect(this.controller.next).toHaveBeenCalled();
+    });
+
+    it('should call controller.close() when the ESC is pressed', function() {
+      this.triggerKey(27);
+      expect(this.controller.close).toHaveBeenCalled();
+    });
+  });
+
+  describe('renderSlide', function() {
+    beforeEach(function() {
+      this.view.open();
+      this.$findSlide = id => $(`.js-slide[data-slide-id="${id}"]`);
+      this.$findSlideContent = id => this.$findSlide(id).find('.js-slide-content');
+    });
+
+    it('should remove the current slide after slide out transition', function() {
+      const slides = this.controller.slides;
+
+      // (a) render 0, (b) render 1, (c) 0 must be deactivated
+
+      this.view.renderSlide(slides[0]);
+      expect(this.$findSlide(0)).toBeInDOM();
+
+      this.view.renderSlide(slides[1]);
+      this.$findSlideContent(0).trigger('transitionend');
+
+      expect(this.$findSlide(0)).not.toBeInDOM();
+      expect(this.controller.deactivateSlide).toHaveBeenCalledWith(slides[0]);
+    });
+
+    it('should not remove an active slide', function() {
+      const slides = this.controller.slides;
+      // simulating very quick next, prev, next motion
+      this.view.renderSlide(slides[0]);
+      this.view.renderSlide(slides[1]);
+      this.view.renderSlide(slides[0]);
+      this.$findSlideContent(0).trigger('transitionend');
+      expect(this.$findSlide(0)).toBeInDOM();
     });
   });
 });
