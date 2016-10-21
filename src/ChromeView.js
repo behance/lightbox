@@ -2,6 +2,7 @@ import 'style!../sass/lightbox.scss';
 import $ from 'jquery';
 import idleTimer from 'idle-timer';
 import tinycolor from 'tinycolor2';
+import touchwipe from 'vanilla-touchwipe';
 import { lightbox as lightboxTemplate } from './templates';
 import { onImgLoad } from './image/onImgLoad';
 import { ZOOMABLE_CLASS, getZoomableClasses } from './image/zoomable';
@@ -43,6 +44,11 @@ export default class ChromeView {
       callback: () => this.hideExtras(),
       activeCallback: () => this.showExtras(),
       idleTime: this._props.idleTimeInMs
+    });
+
+    this._touch = touchwipe(this._$view[0], {
+      wipeLeft: e => act('next', e),
+      wipeRight: e => act('prev', e)
     });
 
     this._$context
@@ -143,6 +149,10 @@ export default class ChromeView {
 
     if (this._idleTimer) {
       this._idleTimer.destroy();
+    }
+
+    if (this._touch) {
+      this._touch.unbind();
     }
   }
 
