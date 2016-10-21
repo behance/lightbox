@@ -49,30 +49,6 @@ html.lightbox-zoomed {
   cursor: zoom-in;
 }
 
-.lightbox-link {
-
-  position: relative;
-
-  &:hover {
-
-    &::after {
-      background: rgba(#696969, .2) url('../icons/expand.svg') no-repeat center;
-      background-size: 16px;
-      border-radius: 50%;
-      content: '';
-      display: block;
-      height: 36px;
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      width: 36px;
-      z-index: 1000;
-    }
-
-  } // &:hover
-
-} // .lightbox-link
-
 %user-select-none {
   -moz-user-select: none;
   -webkit-user-select: none;
@@ -298,6 +274,34 @@ html.lightbox-zoomed {
   }
 
 } // $tablet-and-mobile-breakpoint
+
+@media (min-width: $tablet-and-mobile-breakpoint) {
+
+  .lightbox-link {
+
+    position: relative;
+
+    &:hover {
+
+      &::after {
+        background: rgba(#696969, .2) url('../icons/expand.svg') no-repeat center;
+        background-size: 16px;
+        border-radius: 50%;
+        content: '';
+        display: block;
+        height: 36px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 36px;
+        z-index: 1000;
+      }
+
+    } // &:hover
+
+  } // .lightbox-link
+
+} // $desktop-breakpoint
 
 // IE11, as it does not support the zoom cursor
 @media all and (-ms-high-contrast:none) {
