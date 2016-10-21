@@ -23,7 +23,8 @@
     "hoverintent": "^1.0.3",
     "idle-timer": "git+https://github.com/nemtsov/idle-timer#8fc0007",
     "jquery": "~2.1.1",
-    "tinycolor2": "^1.4.1"
+    "tinycolor2": "^1.4.1",
+    "vanilla-touchwipe": "^1.0.0"
   },
   "devDependencies": {
     "@claviska/jquery-offscreen": "^1.0.1",
