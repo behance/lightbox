@@ -7,6 +7,7 @@ describe('lightbox', function() {
   const LIGHTBOX_CLASS = '.js-lightbox';
   const NEXT_CLASS = '.js-next';
   const CLOSE_CLASS = '.js-close';
+  const HOVER_ICON_CLASS = 'hover-icon-enabled';
   const imagePath = (id) => `/base/test/fixtures/images/img_${id}.png`;
 
   // This is temporary. I don't want to update the code to add proper
@@ -64,5 +65,17 @@ describe('lightbox', function() {
         done();
       }, 15);
     });
+  });
+
+  it('should add hover icon class by default', function() {
+    this.init();
+    expect($(LIGHTBOX_CLASS)).toHaveClass(HOVER_ICON_CLASS);
+  });
+
+  it('should not add hover icon class if disabled', function() {
+    this.init({
+      hoverIconEnabled: false
+    });
+    expect($(LIGHTBOX_CLASS)).not.toHaveClass(HOVER_ICON_CLASS);
   });
 });

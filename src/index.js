@@ -12,7 +12,8 @@ export default {
       bgColor: '#fff',
       opacity: '0.94',
       idleTimeInMs: 5000,
-      isCircular: true
+      isCircular: true,
+      hoverIconEnabled: true
     }, props);
 
     const $context = $(props.context);

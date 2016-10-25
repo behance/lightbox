@@ -4,6 +4,7 @@ import hoverintent from 'hoverintent/dist/hoverintent.min';
 
 const SLIDE_ID_ATTR = 'lightbox-slide-id';
 const LINK_CLASS = 'lightbox-link';
+const HOVER_ICON_ENABLED_CLASS = 'hover-icon-enabled';
 
 export default class Controller {
   constructor($context, props) {
@@ -86,6 +87,7 @@ export default class Controller {
   _bind() {
     const self = this;
     this._$links.addClass(LINK_CLASS)
+      .addClass(this._props.hoverIconEnabled && HOVER_ICON_ENABLED_CLASS)
       .each((id, el) => {
         this._addPrefetchOnHover(el, id);
         $(el).data(SLIDE_ID_ATTR, id);
