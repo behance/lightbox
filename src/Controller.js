@@ -41,6 +41,7 @@ export default class Controller {
   close() {
     this._isOpen = false;
     this.deactivateSlide(this.activeSlide);
+    delete this.activeSlide;
     this._trigger('close');
   }
 
@@ -62,8 +63,9 @@ export default class Controller {
 
   activateSlide(slide) {
     if (!slide) { return; }
+    const prevSlide = this.activeSlide;
     this.activeSlide = slide;
-    this._trigger('activate', slide);
+    this._trigger('activate', [slide, prevSlide]);
   }
 
   deactivateSlide(slide) {

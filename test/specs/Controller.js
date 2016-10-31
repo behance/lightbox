@@ -35,14 +35,19 @@ describe('Controller', function() {
       this.unit.on('close', done);
       this.unit.open(0);
       this.unit.close();
+      expect(this.unit.activeSlide).not.toBeDefined();
     });
   });
 
   describe('next', function() {
     it('should trigger a "activate" event', function(done) {
-      this.unit.on('activate', (slide) => {
-        if (slide.id === 0) { return; }
+      this.unit.on('activate', (slide, prevSlide) => {
+        if (slide.id === 0) {
+          expect(prevSlide).not.toBeDefined();
+          return;
+        }
         expect(slide.id).toBe(1);
+        expect(prevSlide.id).toBe(0);
         done();
       });
       this.unit.open(0);
@@ -52,9 +57,13 @@ describe('Controller', function() {
 
   describe('prev', function() {
     it('should trigger a "prev" event', function(done) {
-      this.unit.on('activate', (slide) => {
-        if (slide.id === 1) { return; }
+      this.unit.on('activate', (slide, prevSlide) => {
+        if (slide.id === 1) {
+          expect(prevSlide).not.toBeDefined();
+          return;
+        }
         expect(slide.id).toBe(0);
+        expect(prevSlide.id).toBe(1);
         done();
       });
       this.unit.open(1);
