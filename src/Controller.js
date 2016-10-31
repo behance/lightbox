@@ -14,6 +14,7 @@ export default class Controller {
     this._$links = this._$context.find(`:not(a) > ${this._props.slideSelector}`);
     this._hoverlisteners = [];
     this.slides = this._createSlides(this._$links);
+    this.activeSlide = void 0;
     this._isOpen = false;
     this._bind();
   }
@@ -41,6 +42,7 @@ export default class Controller {
   close() {
     this._isOpen = false;
     this.deactivateSlide(this.activeSlide);
+    this.activeSlide = void 0;
     this._trigger('close');
   }
 
@@ -62,8 +64,9 @@ export default class Controller {
 
   activateSlide(slide) {
     if (!slide) { return; }
+    const prevSlide = this.activeSlide;
     this.activeSlide = slide;
-    this._trigger('activate', slide);
+    this._trigger('activate', slide, prevSlide);
   }
 
   deactivateSlide(slide) {
@@ -101,7 +104,7 @@ export default class Controller {
       });
   }
 
-  _trigger(eventName, params) {
+  _trigger(eventName, ...params) {
     this._$eventNode.trigger(eventName, params);
   }
 
