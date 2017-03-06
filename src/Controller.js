@@ -1,6 +1,7 @@
 import $ from 'jquery';
 // due to a bug in hoverintent, just import'ing it fails webpack
 import hoverintent from 'hoverintent/dist/hoverintent.min';
+import hasMouseMoved from './hasMouseMoved';
 
 const SLIDE_ID_ATTR = 'lightbox-slide-id';
 const LINK_CLASS = 'lightbox-link';
@@ -133,7 +134,7 @@ export default class Controller {
     this._hoverlisteners.push(
       hoverintent(
         el,
-        () => this._trigger('prefetch', this.slides[id]),
+        e => hasMouseMoved(e) && this._trigger('prefetch', this.slides[id]),
         () => {}
       )
     );
