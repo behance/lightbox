@@ -1,4 +1,4 @@
-import 'style!../sass/lightbox.scss';
+import 'style-loader!../sass/lightbox.scss';
 import $ from 'jquery';
 import idleTimer from 'idle-timer';
 import tinycolor from 'tinycolor2';
