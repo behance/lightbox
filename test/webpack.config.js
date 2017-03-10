@@ -14,11 +14,12 @@ module.exports = {
       }
     }, {
       test: /\.scss$/,
-      loader: 'css-loader!sass-loader?includePaths[]=' + bourbonIncludePaths,
+      loader: 'css-loader!sass-loader?includePaths[]=' + bourbonIncludePaths
     }, {
       test: /\.(png|jpg|gif|svg)$/,
       loader: 'url-loader'
     }]
   },
+  entry: { 'fakeWebpackEntry' : './src/fakeWebpackEntry'},
   plugins: []
 };
