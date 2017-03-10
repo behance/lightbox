@@ -8,17 +8,18 @@ module.exports = {
   module: {
     rules: [{
       test: /\.js$/,
-      loader: 'babel',
+      loader: 'babel-loader',
       query: {
         presets: ['behance']
       }
     }, {
       test: /\.scss$/,
-      loader: 'css!sass?includePaths[]=' + bourbonIncludePaths,
+      loader: 'css-loader!sass-loader?includePaths[]=' + bourbonIncludePaths
     }, {
       test: /\.(png|jpg|gif|svg)$/,
-      loader: 'url'
+      loader: 'url-loader'
     }]
   },
+  entry: { 'fakeWebpackEntry' : './src/fakeWebpackEntry'},
   plugins: []
 };

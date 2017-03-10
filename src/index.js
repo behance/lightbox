@@ -1,4 +1,4 @@
-import 'style!../sass/lightbox.scss';
+import 'style-loader!../sass/lightbox.scss';
 import $ from 'jquery';
 import Controller from './Controller';
 import ChromeView from './ChromeView';

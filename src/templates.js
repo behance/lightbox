@@ -1,4 +1,4 @@
-import 'style!../sass/spinner.scss';
+import 'style-loader!../sass/spinner.scss';
 
 const backdrop = `
   <div class="js-blocking" id="lightbox-blocking">
