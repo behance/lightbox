@@ -1,5 +1,5 @@
 {
-  "name": "lightbox",
+  "name": "@behance/lightbox",
   "version": "9.0.0",
   "description": "Image lightbox",
   "main": "src",
