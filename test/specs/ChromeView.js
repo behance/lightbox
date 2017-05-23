@@ -12,10 +12,12 @@ const CHROME_WRAP_CLASS = '.js-lightbox-wrap';
 const PREV_CLASS = '.js-prev';
 const NEXT_CLASS = '.js-next';
 const HIDDEN_CLASS = 'hidden';
+const OFFSCREEN_CLASS = 'offscreen';
 const expectPrevToBeHidden = () => expect($(PREV_CLASS)).toHaveClass(HIDDEN_CLASS);
 const expectPrevToBeShown = () => expect($(PREV_CLASS)).not.toHaveClass(HIDDEN_CLASS);
 const expectNextToBeHidden = () => expect($(NEXT_CLASS)).toHaveClass(HIDDEN_CLASS);
 const expectNextToBeShown = () => expect($(NEXT_CLASS)).not.toHaveClass(HIDDEN_CLASS);
+const expectToBeOffscreen = ($el) => expect($el).toHaveClass(OFFSCREEN_CLASS);
 
 describe('ChromeView', function() {
   beforeEach(function() {
@@ -37,6 +39,8 @@ describe('ChromeView', function() {
       this.listeners = this.controller.on.calls.first().args[0];
     };
     this.set({ imageSrcDataAttr: 'src' });
+    this.$findSlide = id => $(`.js-slide[data-slide-id="${id}"]`);
+    this.$findSlideContent = id => this.$findSlide(id).find('.js-slide-content');
   });
 
   afterEach(function() {
@@ -133,8 +137,6 @@ describe('ChromeView', function() {
   describe('renderSlide', function() {
     beforeEach(function() {
       this.view.open();
-      this.$findSlide = id => $(`.js-slide[data-slide-id="${id}"]`);
-      this.$findSlideContent = id => this.$findSlide(id).find('.js-slide-content');
     });
 
     it('should remove the current slide after slide out transition', function() {
@@ -160,6 +162,24 @@ describe('ChromeView', function() {
       this.view.renderSlide(slides[0]);
       this.$findSlideContent(0).trigger('transitionend');
       expect(this.$findSlide(0)).toBeInDOM();
+    });
+  });
+
+  describe('prefetch', function() {
+    it('should append a slide without rendering it', function() {
+      this.listeners.prefetch(this.controller.slides[0]);
+      const $slide = this.$findSlide(0);
+      expect($slide).toBeInDOM();
+      expectToBeOffscreen($slide);
+    });
+
+    it('should not append a slide with data-no-prefetch="true"', function() {
+      this.listeners.prefetch({
+        ...this.controller.slides[0],
+        data: { noPrefetch: true },
+      });
+      const $slide = this.$findSlide(0);
+      expect($slide).not.toBeInDOM();
     });
   });
 });

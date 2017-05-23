@@ -169,8 +169,12 @@ export default class ChromeView {
     this._$view.removeClass(EXTRAS_HIDDEN_CLASS);
   }
 
-  _appendSlide(slide) {
-    if (!slide || this._$contents.find(`[data-slide-id="${slide.id}"]`).length) { return; }
+  _appendSlide(slide, { isPrefetch } = {}) {
+    if (!slide ||
+        this._$contents.find(`[data-slide-id="${slide.id}"]`).length ||
+        (isPrefetch && slide.data.noPrefetch)) {
+      return;
+    }
 
     const $content = $('<div>')
       .addClass(`${JS_SLIDE_CONTENT_CLASS} ${CONTENT_CLASS} ${HIDDEN_CLASS}`)
@@ -183,14 +187,16 @@ export default class ChromeView {
 
 
   _appendAdjacentSlides($current, $new) {
+    const appendOptions = { isPrefetch: true };
     if ($current.length === 0) {
-      this._appendSlide(this._controller.getPrevSlide());
-      this._appendSlide(this._controller.getNextSlide());
+      this._appendSlide(this._controller.getPrevSlide(), appendOptions);
+      this._appendSlide(this._controller.getNextSlide(), appendOptions);
     }
     else {
       this._appendSlide($current.data('slide-id') < $new.data('slide-id')
         ? this._controller.getNextSlide()
-        : this._controller.getPrevSlide());
+        : this._controller.getPrevSlide(),
+        appendOptions);
     }
   }
 
@@ -200,7 +206,7 @@ export default class ChromeView {
       close: () => this.close(),
       destroy: () => this.destroy(),
       activate: slide => this.renderSlide(slide),
-      prefetch: slide => this._appendSlide(slide)
+      prefetch: slide => this._appendSlide(slide, { isPrefetch: true })
     });
   }
 
