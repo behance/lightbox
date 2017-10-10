@@ -1,5 +1,6 @@
 import 'style-loader!../sass/lightbox.scss';
 import $ from 'jquery';
+import idleTimer from 'idle-timer';
 import tinycolor from 'tinycolor2';
 import touchwipe from 'vanilla-touchwipe';
 import { lightbox as lightboxTemplate } from './templates';
@@ -19,25 +20,6 @@ const TRANSITION_END = 'webkitTransitionEnd ontransitionend msTransitionEnd tran
 const JS_SLIDE_CLASS = 'js-slide';
 const JS_SLIDE_CONTENT_CLASS = 'js-slide-content';
 const LOADING_CLASS = 'loading';
-
-function idleTimer(options) {
-  options = options || {};
-  var callback = options.callback || function() {};
-  var idleTime = options.idleTime || 60000;
-  var timer;
-
-  window.onload = resetTimer;
-  document.onmousemove = resetTimer;
-  document.onscroll = resetTimer;
-  document.onkeypress = resetTimer;
-
-  resetTimer();
-
-  function resetTimer() {
-    clearTimeout(timer);
-    timer = setTimeout(callback, idleTime);
-  }
-}
 
 export default class ChromeView {
   constructor($context, controller, props) {
