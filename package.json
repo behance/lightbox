@@ -21,7 +21,7 @@
   "homepage": "https://github.com/behance/lightbox#readme",
   "dependencies": {
     "hoverintent": "^1.0.3",
-    "idle-timer": "git+https://github.com/nemtsov/idle-timer#8fc0007",
+    "idle-timer": "^1.2.0",
     "jquery": "~2.1.1",
     "tinycolor2": "^1.4.1",
     "vanilla-touchwipe": "^1.0.0"
