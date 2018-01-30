@@ -47,17 +47,21 @@ export default class ChromeView {
     });
 
     this._touch = touchwipe(this._$view[0], {
-      wipeLeft: e => act('next', e),
-      wipeRight: e => act('prev', e)
+      wipeLeft: e => {
+        if ($html.hasClass(ZOOMED_CLASS)) { return; }
+        act('next', e);
+      },
+      wipeRight: e => {
+        if ($html.hasClass(ZOOMED_CLASS)) { return; }
+        act('prev', e);
+      }
     });
 
     this._$context
       .on('click.lightbox', '.js-next', (e) => act('next', e))
       .on('click.lightbox', '.js-prev', (e) => act('prev', e))
       .on('click.lightbox', '.js-close', (e) => act('close', e))
-      .on('click.lightbox', `.${JS_SLIDE_CONTENT_CLASS}.${ZOOMABLE_CLASS}`, () => {
-        $html.toggleClass(ZOOMED_CLASS);
-      });
+      .on('click.lightbox', `.${JS_SLIDE_CONTENT_CLASS}.${ZOOMABLE_CLASS}`, () => $html.toggleClass(ZOOMED_CLASS));
 
     $(document)
       .on('mouseout.lightbox', () => this._idleTimer.idle())

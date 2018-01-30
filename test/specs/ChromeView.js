@@ -24,7 +24,7 @@ describe('ChromeView', function() {
     const fixture = setFixtures(FIXTURE);
     this.$context = fixture.find('#container');
     this.controller = jasmine.createSpyObj('controller', [
-      'on', 'off', 'next', 'prev', 'close', 'getPrevSlide', 'getNextSlide', 'deactivateSlide'
+      'on', 'off', 'next', 'prev', 'close', 'getPrevSlide', 'getNextSlide', 'deactivateSlide',
     ]);
     this.props = {};
     this.set = (props, slides) => {

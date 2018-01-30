@@ -4,9 +4,10 @@
   "description": "Image lightbox",
   "main": "src",
   "scripts": {
-    "test": "npm run eslint && npm run karma -- --single-run",
     "eslint": "eslint src/**/*.js test/**/*.js",
-    "karma": "env NODE_ENV=test karma start test/karma.conf.js",
+    "eslint:fix": "npm run eslint -- --fix",
+    "test": "npm run eslint && npm run test:dev -- --single-run",
+    "test:dev": "env NODE_ENV=test karma start test/karma.conf.js",
     "examples-simple": "webpack-dev-server --content-base examples/simple --config ./test/webpack.config.js --entry ./examples/simple"
   },
   "repository": {
