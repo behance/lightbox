@@ -15,7 +15,7 @@ describe('Controller', function() {
     const fixture = setFixtures(FIXTURE);
     this.$context = fixture.find('#container');
     this.unit = new Controller(this.$context, {
-      slideSelector: 'img'
+      slideSelector: 'img',
     });
   });
 
